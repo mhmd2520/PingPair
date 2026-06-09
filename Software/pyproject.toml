@@ -1,0 +1,99 @@
+[project]
+name = "pingpair"
+version = "0.1.0"
+description = "Automated LAN characterization tool using fping and iperf3"
+requires-python = ">=3.11"
+authors = [{ name = "Mohamed Khaled" }]
+readme = "README.md"
+license = { text = "Proprietary" }
+dependencies = [
+  "PySide6>=6.6",
+  "pyqtgraph>=0.13",
+  "python-docx>=1.1",
+  "reportlab>=4.0",
+  "openpyxl>=3.1",
+  "pydantic>=2.6",
+  "psutil>=5.9",
+  "tabulate>=0.9",
+  # matplotlib (Agg backend) renders the per-metric line charts +
+  # per-payload / per-bandwidth bar charts embedded in the docx + pdf
+  # Analysis appendix. Headless — no display server required.
+  "matplotlib>=3.8",
+]
+
+[project.optional-dependencies]
+dev = [
+  "ruff>=0.4",
+  "mypy>=1.8",
+  "pytest>=8.0",
+  "pytest-qt>=4.4",
+  # Phase-5 packaging: one-folder Windows .exe (see Build/pyinstaller/).
+  "pyinstaller>=6.10",
+]
+
+[project.scripts]
+pingpair = "pingpair.__main__:main"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+# Ship the brand SVG + the bundled Inter UI font + the folder-based Help
+# guide (HTML + any per-section images) and the JSON defaults inside wheels /
+# sdists so a non-editable / frozen install still finds them.
+pingpair = [
+  "resources/*.svg",
+  "resources/fonts/*",
+  "resources/help/*/*.html",
+  "resources/help/*/*.png",
+  # Theme+role-matched Help screenshots:
+  # _shots/<light|dark>/<server|client|loopback>/<section>/<name>.png.
+  # (The 3-level glob covers any legacy/role-agnostic shots a level up.)
+  "resources/help/_shots/*/*/*.png",
+  "resources/help/_shots/*/*/*/*.png",
+  # Theme-matched, role-agnostic Help artwork (the Overview topology
+  # diagrams): _assets/<light|dark>/<name>.png. Figma exports, kept out of
+  # _shots so the screenshot rebuild can't wipe them.
+  "resources/help/_assets/*/*.png",
+  "config/*.json",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src"]
+
+[tool.ruff.lint]
+select = [
+  "E",    # pycodestyle errors
+  "W",    # pycodestyle warnings
+  "F",    # pyflakes
+  "I",    # isort
+  "B",    # bugbear
+  "UP",   # pyupgrade
+  "SIM",  # simplify
+  "RUF",  # ruff-specific
+]
+ignore = ["E501"]  # line length handled by formatter
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+mypy_path = "src"
+packages = ["pingpair"]
+exclude = ["tests/", "build/", "dist/"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Pin pytest-qt to PySide6 so its qtbot fixture binds to the same Qt binding
+# the app ships (it would otherwise probe for any installed binding). qtbot
+# also auto-fails a test on an uncaught exception raised inside a Qt slot or
+# virtual method — the exact silent-crash class behind Round-21 YY.
+qt_api = "pyside6"

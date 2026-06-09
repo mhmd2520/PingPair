@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Run</title>
+</head>
+<body>
+
+<h1>Running a sweep</h1>
+
+<p class="lead">
+The <b>Run</b> tab is where the test actually happens. What it shows depends on
+this PC's role — the Client drives, the Server obeys, and Loopback does both on
+one machine.
+</p>
+
+<div class="figure">
+  <a href="zoom:01-overview.png"><img src="01-overview.png" width="900" alt="The Run tab for this PC's role"></a>
+  <p class="caption">The <b>Run</b> tab as it looks for this PC's current role — the
+  case table on the left, live throughput + latency charts on the right.
+  <span class="zoom">Click the image to enlarge.</span></p>
+</div>
+
+<h2>How the two sides talk</h2>
+
+<p>
+The Client drives; the Server obeys. They coordinate over a control channel on
+TCP&nbsp;<tt>5202</tt> — separate from iperf3's own data port (<tt>5201</tt>).
+</p>
+
+<div class="figure">
+  <img src="control-sequence.png" width="900" alt="Sequence: Client sends HELLO, Server READY; then for each of 20 cases START_CASE, SERVER_READY, the iperf3 and fping run, CASE_DONE, SERVER_RESULT; finally FINISH and both ends save.">
+  <p class="caption">The control-channel handshake: a HELLO/READY greeting, a per-case
+  START/READY/DONE/RESULT exchange for all 20 cases, then FINISH — both ends save.</p>
+</div>
+
+<h2>On the Server</h2>
+
+<p>
+The Server side mostly waits. It listens on TCP <tt>5202</tt> for the Client's
+control connection and starts/stops iperf3 for each case on command. The panel
+shows a status line — "Listening on 192.168.1.1&hellip;" — and a live log.
+</p>
+
+<div class="callout note">
+  <p class="ctitle">"Waiting for &hellip; to come up" is normal</p>
+  <p>
+  If the Server's IP isn't bound yet (e.g. you just booted on DHCP and haven't
+  run <span class="btn">Set the correct IP</span>), the listener says it's
+  waiting and keeps retrying. The moment the IP is set, it starts listening
+  on its own — <b>no app restart needed</b>.
+  </p>
+</div>
+
+<h2>On the Client</h2>
+
+<p>Two ways to run:</p>
+<ul>
+  <li><span class="btn">Run full sweep</span> — runs all cases in the plan.</li>
+  <li><span class="btn">Run subset (N cases)</span> — tick individual rows in the table first, then run only those. Useful for re-testing a single payload/bandwidth combination.</li>
+</ul>
+
+<p>
+As the sweep runs, the case table fills in row by row, a progress bar tracks
+completion, and a whole-sweep <b>ETA / elapsed time</b> readout adapts as cases
+finish. The charts on the right show live per-second throughput and latency for
+the case in flight.
+</p>
+
+<div class="callout warn">
+  <p class="ctitle">Expect ~50&nbsp;s per case, not 30&nbsp;s</p>
+  <p>
+  Each case is a 30&nbsp;s iperf3 run plus an fping run. Windows' timer
+  granularity (~15.6&nbsp;ms) stretches fping's 10&nbsp;ms ping interval, so a
+  full 20-case sweep takes roughly <b>16&nbsp;minutes</b>. This is expected, not
+  a hang.
+  </p>
+</div>
+
+<h2>Stopping early</h2>
+
+<p>
+The Run button becomes a <b>Stop</b> while a sweep is in flight. Stopping (or a
+connection error) ends the sweep cleanly and re-enables the Run button with the
+right label — completed cases keep their results.
+</p>
+
+<h2>When it finishes</h2>
+
+<p>
+A popup summarises the run: how many cases succeeded out of the total, the total
+duration, and — via its <b>Details</b> button — every file that was saved. What
+gets saved (and whether you're prompted first) is controlled on the
+<a href="help:save-options">Save Options</a> tab.
+</p>
+
+<div class="callout tip">
+  <p class="ctitle">Before your first real run</p>
+  <p>
+  Use the <a href="help:ping">Ping</a> tab to smoke-test reachability: target the
+  other side's IP and press Ping. A clean, 0% loss result means the LAN is sane
+  and the firewall isn't blocking ICMP. Fix the network first if this fails.
+  </p>
+</div>
+
+</body>
+</html>

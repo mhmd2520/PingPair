@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Config</title>
+</head>
+<body>
+
+<h1>Config — the test plan</h1>
+
+<p class="lead">
+The <b>Config</b> tab defines <i>what</i> gets tested: the payload sizes, the
+bandwidths, and the network addresses each side uses. The defaults already match
+the standard procedure, so you can usually leave this alone.
+</p>
+
+<div class="figure">
+  <a href="zoom:01-overview.png"><img src="01-overview.png" width="900" alt="The Config tab: Test plan box, network IP fields, Raw JSON pane, and Live CLI preview."></a>
+  <p class="caption">The Config tab — the Test plan box (payloads, bandwidths, duration, protocol, IPs, ports), the live Raw JSON pane, and the Live CLI preview of the exact commands a sweep will run. <span class="zoom">Click the image to enlarge.</span></p>
+</div>
+
+<h2>The 20-case grid</h2>
+
+<p>
+A sweep is every <b>payload</b> crossed with every <b>bandwidth</b>. The defaults
+are four payloads &times; five bandwidths = <b>20 cases</b>, each running ~30&nbsp;s:
+</p>
+
+<table>
+  <tr><th>Payload (bytes)</th><td>200, 600, 1000, 1300</td></tr>
+  <tr><th>Bandwidth (Mbps)</th><td>10, 30, 50, 70, 90</td></tr>
+</table>
+
+<div class="figure">
+  <img src="case-grid.png" width="880" alt="A 4x5 grid: four payload rows (200, 600, 1000, 1300 bytes) by five bandwidth columns (10, 30, 50, 70, 90 Mbps), cells numbered 1 to 20.">
+  <p class="caption">The 20 cases — four payloads down, five bandwidths across, run in order 1&nbsp;&rarr;&nbsp;20.</p>
+</div>
+
+<p>
+Edit either list in the <b>Test plan</b> box as comma-separated numbers. The case
+count updates to match (e.g. 3 payloads &times; 4 bandwidths = 12 cases).
+</p>
+
+<h2>Network addresses</h2>
+
+<p>
+The canonical point-to-point setup binds the two laptops back-to-back over
+Ethernet:
+</p>
+
+<table>
+  <tr><th>Field</th><th>Default</th><th>Meaning</th></tr>
+  <tr><td>Server IP</td><td><tt>192.168.1.1</tt></td><td>The side that listens.</td></tr>
+  <tr><td>Client IP</td><td><tt>192.168.1.2</tt></td><td>The side that drives the sweep.</td></tr>
+  <tr><td>Subnet mask</td><td><tt>255.255.255.0</tt></td><td>/24 — both ends on the same subnet.</td></tr>
+  <tr><td>Gateway</td><td><i>(blank)</i></td><td>Leave empty for a point-to-point LAN. Set it only if your test path crosses a router.</td></tr>
+</table>
+
+<div class="callout note">
+  <p class="ctitle">These IPs drive the checks too</p>
+  <p>
+  Changing the Server/Client IPs here re-evaluates the Setup tab's role and NIC
+  checks against the new values, and the <span class="btn">Set the correct IP</span>
+  fix will assign whatever you set here.
+  </p>
+</div>
+
+<h2>Saving &amp; loading plans</h2>
+
+<ul>
+  <li><span class="btn">Apply to current session</span> — make your edits live for this run (also rebuilds the Run tab's grid).</li>
+  <li><span class="btn">Save As&hellip;</span> — write the current plan to a <tt>.json</tt> profile you can reuse.</li>
+  <li><span class="btn">Import config&hellip;</span> — load a plan from a <tt>.json</tt> file.</li>
+  <li><span class="btn">Download Template&hellip;</span> — save a blank/example profile to start from.</li>
+  <li><span class="btn">Reset to defaults</span> — restore the standard 4&times;5 grid and IPs.</li>
+</ul>
+
+<h2>Live CLI preview</h2>
+
+<p>
+The <b>Live CLI preview</b> box shows the exact <tt>fping</tt> and <tt>iperf3</tt>
+command lines your current plan will produce, so you can see precisely what each
+case runs before pressing Run. The <b>Raw JSON</b> box exposes the same plan as
+the JSON that gets stored alongside each report. For what every flag means, see
+the <a href="help:fping-reference">fping reference</a> and
+<a href="help:iperf3-reference">iperf3 reference</a> sections.
+</p>
+
+</body>
+</html>

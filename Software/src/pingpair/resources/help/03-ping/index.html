@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Ping</title>
+</head>
+<body>
+
+<h1>Ping — reachability check</h1>
+
+<p class="lead">
+The <b>Ping</b> tab is a quick smoke test you run <i>before</i> a full sweep. It
+wraps Windows' built-in <tt>ping</tt> — no Cygwin involved — to confirm the two
+laptops can actually see each other over the Ethernet link. If this fails, fix
+the network or the firewall before you bother with a 16-minute sweep.
+</p>
+
+<div class="figure">
+  <a href="zoom:01-overview.png"><img src="01-overview.png" width="900" alt="The Ping tab: target and count at the top, live ping output in the middle, parsed summary below."></a>
+  <p class="caption">The Ping tab — the target and count at the top, the live <tt>ping</tt> output in the middle, and the parsed summary (sent / received, loss, min / avg / max RTT) below. <span class="zoom">Click the image to enlarge.</span></p>
+</div>
+
+<h2>Running a ping</h2>
+
+<table>
+  <tr><th>Field</th><th>What it does</th></tr>
+  <tr><td>Target IP</td><td>The address to ping. It's pre-filled with the <i>other</i> side for your role (see below). A red border flags an invalid dotted-quad before you even press the button.</td></tr>
+  <tr><td>Count (packets)</td><td>How many echo requests to send (1&ndash;100, default 4).</td></tr>
+  <tr><td><span class="btn">Ping</span> / <span class="btn">Stop</span></td><td>Start the run, or cut it short. Output streams live; <span class="btn">Stop</span> ends it cleanly.</td></tr>
+</table>
+
+<div class="callout note">
+  <p class="ctitle">The target defaults to the other PC</p>
+  <p>
+  PingPair pre-fills the target with whichever end you'd be testing against:
+  </p>
+  <table>
+    <tr><th>This PC's role</th><th>Default target</th></tr>
+    <tr><td>Server</td><td>the Client (<tt>192.168.1.2</tt>)</td></tr>
+    <tr><td>Client</td><td>the Server it sweeps (<tt>192.168.1.1</tt>, or your host override)</td></tr>
+    <tr><td>Loopback</td><td><tt>127.0.0.1</tt></td></tr>
+  </table>
+  <p>
+  Change the role and the default follows — but anything you typed yourself is
+  preserved.
+  </p>
+</div>
+
+<h2>Reading the summary</h2>
+
+<p>
+When the run finishes, the summary panel parses the key numbers out of ping's
+output so you don't have to:
+</p>
+
+<ul>
+  <li><b>Packets sent / received</b> and <b>lost</b> — the raw counts.</li>
+  <li><b>Loss</b> — the percentage. On a healthy direct link this should be <b>0%</b>.</li>
+  <li><b>Min / Avg / Max RTT</b> — round-trip time in milliseconds. On a back-to-back Ethernet link expect well under 1&nbsp;ms.</li>
+</ul>
+
+<div class="callout warn">
+  <p class="ctitle">Ping passing isn't the whole story</p>
+  <p>
+  A clean ping proves ICMP gets through, but the sweep also needs the iperf3 data
+  port and the control channel open. If ping is perfect yet a sweep still can't
+  connect, it's a firewall port, not the cable &mdash; see
+  <a href="help:troubleshooting">Troubleshooting</a>.
+  </p>
+</div>
+
+<div class="callout tip">
+  <p class="ctitle">Seeing phantom loss?</p>
+  <p>
+  Non-zero loss on a direct cable usually means a Wi-Fi adapter is stealing the
+  <tt>192.168.1.x</tt> traffic. Disable it from the <a href="help:setup">Setup</a>
+  tab and ping again.
+  </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Troubleshooting</title>
+</head>
+<body>
+
+<h1>Troubleshooting</h1>
+
+<p class="lead">
+Each entry below is <b>symptom &rarr; root cause &rarr; fix</b>. Most fixes are a
+single button on the <b>Setup</b> tab.
+</p>
+
+<h2>The Client can't reach the Server / "control channel timed out"</h2>
+<p><b>Root cause &amp; fix — work through these in order:</b></p>
+<table>
+  <tr><th>Likely cause</th><th>Fix</th></tr>
+  <tr><td>The control-channel firewall rule is missing on the Server.</td>
+      <td>On the Server, Setup tab &rarr; <span class="btn">Open 5202 (TCP)</span>.</td></tr>
+  <tr><td>The Server's IP (<tt>192.168.1.1</tt>) isn't bound yet, so its listener is still waiting.</td>
+      <td>On the Server, Setup tab &rarr; <span class="btn">Set the correct IP</span>. The listener picks it up automatically — no restart.</td></tr>
+  <tr><td>The Server side isn't running PingPair, or isn't in Server role.</td>
+      <td>Launch PingPair on the Server PC and confirm the top banner says <b>Server</b>.</td></tr>
+</table>
+<p>
+A plain ping can succeed (ICMP) while the control channel still fails — they use
+different ports. Confirm port <tt>5202</tt> is open, not just that ping works.
+</p>
+
+<h2>Both PCs show a 169.254.x.x address</h2>
+<p>
+<b>Root cause:</b> the isolated Ethernet link has no DHCP server, so each laptop
+fell back to an APIPA self-assigned address (<tt>169.254.x.x</tt>) and never got
+<tt>192.168.1.x</tt>.<br>
+<b>Fix:</b> on <i>each</i> PC, Setup tab &rarr; <span class="btn">Set the correct IP</span>.
+That assigns the role's static IP via <tt>netsh</tt>. The Local NIC IP check
+turns green and the Server listener comes up on its own.
+</p>
+
+<h2>Orange banner: "this PC's IP doesn't match the saved role"</h2>
+<p>
+<b>Root cause:</b> the role saved for this PC expects an IP that isn't currently
+bound (NIC reset, moved LAN, DHCP reclaim).<br>
+<b>Fix:</b> either click <span class="btn">Set the correct IP</span> to bind the
+expected address, or change the role with the Setup-tab Role selector to match
+what this PC actually is. PingPair never flips the role for you.
+</p>
+
+<div class="figure">
+  <a href="zoom:01-orange-banner.png"><img src="01-orange-banner.png" width="900" alt="The orange role-mismatch banner with How to fix and Dismiss buttons, above the Setup tab."></a>
+  <p class="caption">The orange banner sits across the top of every tab. It spells out the expected vs. bound IP, and its "How to fix" button brings you straight here. <span class="zoom">Click the image to enlarge.</span></p>
+</div>
+
+<h2>Reports show packet loss that shouldn't be there</h2>
+<p>
+<b>Root cause:</b> a Wi-Fi adapter is online and carrying an IPv4 address, so
+Windows sometimes routes <tt>192.168.1.x</tt> test traffic over Wi-Fi instead of
+the dedicated Ethernet link — producing phantom loss.<br>
+<b>Fix:</b> Setup tab &rarr; <span class="btn">Disconnect Wi-Fi</span>. It's
+re-enabled automatically when you close the app or click Reset all settings.
+</p>
+
+<h2>The fix buttons are greyed out</h2>
+<p>
+<b>Root cause:</b> the firewall and IP fixes use <tt>netsh</tt>, which needs
+Administrator. The app isn't elevated.<br>
+<b>Fix:</b> <span class="btn">Restart as Administrator</span> on the Admin row.
+On Windows PingPair normally auto-elevates at launch via a UAC prompt; if you
+declined it, this button re-triggers elevation.
+</p>
+
+<h2>"fping binary not found" / "iperf3 binary not found"</h2>
+<p>
+<b>Root cause:</b> the bundled executable is missing from
+<tt>bin\fping\</tt> or <tt>bin\iperf3\</tt>.<br>
+<b>Fix:</b> restore the file from the project's <tt>Network-Tools\</tt> folder.
+The two tools ship with different runtime DLLs and must stay in their own
+subfolders.
+</p>
+
+<h2>"Gateway reachable" shows a warning</h2>
+<p>
+<b>Root cause:</b> a gateway is configured but didn't answer a ping — usually a
+typo, or a gateway set on a point-to-point LAN that has none.<br>
+<b>Fix:</b> on the Config tab, correct the gateway IP, or clear the Gateway field
+if this PC is on a direct point-to-point link. This is a warning, not a blocker.
+</p>
+
+<h2>A sweep "hangs" at ~50 seconds per case</h2>
+<p>
+<b>Not a bug.</b> Windows' ~15.6&nbsp;ms timer granularity stretches fping's
+10&nbsp;ms ping interval, so each case takes about 50&nbsp;s rather than the
+nominal 30&nbsp;s, and a full 20-case sweep runs ~16&nbsp;minutes. Let it finish.
+</p>
+
+<div class="callout tip">
+  <p class="ctitle">Still stuck?</p>
+  <p>
+  The <b>About</b> tab has <span class="btn">Copy diagnostic info</span> (role,
+  paths, settings) and <span class="btn">Open log folder</span> — attach those
+  when reporting a problem.
+  </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+# PingPair — build & runtime artifacts only.
+#
+# Note: dev-only docs and config (CLAUDE.md, plan.md, Archive-status.md,
+# .claude/, dev scripts) are never copied into this repo by the export step —
+# the allowlist export, not this .gitignore, is what keeps them out.
+#
+# The secret/credential patterns at the bottom are a third, defence-in-depth
+# layer: the export step already (1) excludes these shapes from the copy and
+# (2) aborts the publish if one reaches the public tree, but ignoring them
+# here too means a credential committed by hand into a local public checkout
+# can't be staged by accident either.
+
+# ── Python ──────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ── Virtual environments (machine-local, never shared) ──────────────
+.venv/
+Software/.venv/
+env/
+venv/
+
+# ── PyInstaller build / distribution output ─────────────────────────
+# Anchored under Software/ (the public repo ships the app only; the
+# Build/ packaging tree is private). Windows git is case-insensitive.
+/Software/build/
+/Software/dist/
+
+# ── Generated run output ────────────────────────────────────────────
+Reports/
+Software/Reports/
+Configs/Template.json
+
+# ── OS junk ─────────────────────────────────────────────────────────
+Thumbs.db
+desktop.ini
+
+# ── Secrets / credentials (defence-in-depth; see header) ────────────
+.env
+.env.*
+*.pem
+*.key
+*.pfx
+*.p12
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+.npmrc
+.pypirc
+.netrc
+_netrc
+.pgpass
+credentials
+credentials.*
+secrets.json
+*.secret
+*.pat
+*.token
+github-pat.plugin

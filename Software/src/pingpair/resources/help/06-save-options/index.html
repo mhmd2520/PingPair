@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Save Options</title>
+</head>
+<body>
+
+<h1>Save Options &amp; reports</h1>
+
+<p class="lead">
+The <b>Save Options</b> tab controls how each sweep's report set is written: the
+formats, where they land, optional record metadata, and whether PingPair asks you
+first.
+</p>
+
+<div class="figure">
+  <a href="zoom:01-overview.png"><img src="01-overview.png" width="900" alt="The Save Options tab: Save settings box, format checkboxes, and Test-record metadata fields."></a>
+  <p class="caption">The Save Options tab — the Save settings box (auto-save toggle, destination, filename pattern), the report-format checkboxes, and the optional Test-record metadata fields. <span class="zoom">Click the image to enlarge.</span></p>
+</div>
+
+<h2>What a sweep writes</h2>
+
+<p>
+Each run gets its own folder under <tt>Reports\PingPair_&lt;timestamp&gt;\</tt>.
+The Word, Excel and JSON sidecar are always written; PDF and TXT are added when
+you tick them below.
+</p>
+
+<div class="figure">
+  <img src="report-artifacts.png" width="880" alt="A per-sweep folder PingPair_timestamp branches to report.docx, report.xlsx and sidecar.json (always), plus optional report.pdf and report.txt.">
+  <p class="caption">One sweep &rarr; one folder: <tt>.docx</tt> + <tt>.xlsx</tt> + <tt>.json</tt>
+  always, plus <tt>.pdf</tt> / <tt>.txt</tt> if ticked.</p>
+</div>
+
+<h2>Prompt-first vs. auto-save</h2>
+
+<p>
+By default <b>Auto save is off</b> — when a sweep finishes, PingPair <b>prompts</b>
+you for a destination and filename. This keeps things explicit. Tick
+<span class="btn">Auto save</span> to instead write every run automatically to the
+configured Destination folder using the Filename pattern, hands-free.
+</p>
+
+<h2>What gets written</h2>
+
+<p>Each sweep produces a folder of artefacts:</p>
+
+<table>
+  <tr><th>Format</th><th>By default</th><th>Notes</th></tr>
+  <tr><td>Word (<tt>.docx</tt>)</td><td>on</td><td>The formatted report matching the standard results table.</td></tr>
+  <tr><td>Excel (<tt>.xlsx</tt>)</td><td>on</td><td>The same data as a spreadsheet, plus a Run-info sheet.</td></tr>
+  <tr><td>PDF (<tt>.pdf</tt>)</td><td>off</td><td>Tick to also render a PDF.</td></tr>
+  <tr><td>Plain text (<tt>.txt</tt>)</td><td>off</td><td>Tick for a no-frills text summary.</td></tr>
+  <tr><td>JSON sidecar (<tt>.json</tt>)</td><td>always</td><td>The exact config that produced the run — used by the Analysis tab and to reproduce a sweep.</td></tr>
+</table>
+
+<p>
+Everything for one run lands together in a per-sweep subfolder named
+<tt>PingPair_&lt;timestamp&gt;</tt>, so runs never get mixed up. You can also embed
+the per-metric charts in the Word/PDF via the charts option.
+</p>
+
+<h2>Test-record metadata (optional)</h2>
+
+<p>
+Fill in fields like technician, customer, hardware serial, environment, and a
+record ID. Anything you enter is saved and embedded in the report headers; blank
+fields are simply omitted. These persist between runs.
+</p>
+
+<h2>Managing reports</h2>
+
+<ul>
+  <li><span class="btn">Save report now</span> — manually save the last sweep (handy when Auto save is off and you dismissed the prompt).</li>
+  <li><span class="btn">Open destination folder</span> — jump to where reports are written.</li>
+  <li><b>Recent reports</b> — lists report folders found in the destination, so previous-session runs survive a restart.</li>
+  <li><span class="btn">Reset to defaults</span> — restore Auto-save off, the default destination and filename pattern (leaves metadata and the recent list alone).</li>
+</ul>
+
+<div class="callout note">
+  <p class="ctitle">Older / one-off files</p>
+  <p>
+  The recent list only scans the per-sweep folder layout. To view a sidecar from
+  somewhere else on disk, use the Analysis tab's <span class="btn">Add file&hellip;</span>
+  button.
+  </p>
+</div>
+
+</body>
+</html>

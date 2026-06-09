@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Overview</title>
+</head>
+<body>
+
+<h1>Overview — the architecture in diagrams</h1>
+
+<p class="lead">
+A diagram-led tour of how PingPair is put together, ordered the way the system
+actually flows: the physical test setup, the one-PC alternative, how the tabs
+fit together, the four-step operating path, what happens on the wire per case,
+the 20-case matrix, and finally what a run leaves on disk. New here? Take the
+<a href="help:quick-start">Quick Start</a> first — this page is the bigger
+picture behind it.
+</p>
+
+<h2>1 · Test topology</h2>
+<p>Where it all starts: two laptops wired back-to-back over a single Ethernet
+cable — no switch or router. The Server listens on <tt>192.168.1.1</tt>; the
+Client drives the sweep from <tt>192.168.1.2</tt>.</p>
+<div class="figure">
+  <img src="topology.png" width="900" alt="Two laptops wired back-to-back: Server 192.168.1.1 and Client 192.168.1.2 over one Ethernet cable.">
+  <p class="caption">The standard two-laptop test topology.</p>
+</div>
+
+<h2>2 · Loopback (one-PC) topology</h2>
+<p>No second machine? Loopback collapses both roles onto one PC over
+<tt>127.0.0.1</tt> — the same 20-case grid and the same report, with no cable.
+Ideal for a dry run before you wire two laptops together.</p>
+<div class="figure">
+  <img src="topology-loopback.png" width="900" alt="Loopback mode: one PC plays both Server and Client over 127.0.0.1.">
+  <p class="caption">Loopback mode — both roles on a single PC.</p>
+</div>
+
+<h2>3 · How the tabs fit together</h2>
+<p>The application is organised as a left-to-right flow: prepare the link
+(Setup, Ping, Config), run the sweep (Run), then read the results (Save Options,
+Analysis) — with Help backing every step.</p>
+<div class="figure">
+  <img src="workflow.png" width="900" alt="Prepare (Setup, Ping, Config) feeds Run, which feeds Results (Save Options, Analysis); Help backs every step.">
+  <p class="caption">Prepare &rarr; run &rarr; read the results.</p>
+</div>
+
+<table>
+  <tr><th>Section</th><th>What it covers</th></tr>
+  <tr><td><a href="help:setup">Setup</a></td><td>Role auto-detect, the prerequisite checks, and one-click fixes.</td></tr>
+  <tr><td><a href="help:ping">Ping</a></td><td>A quick reachability smoke test before the real run.</td></tr>
+  <tr><td><a href="help:config">Config</a></td><td>The 20-case grid, network addresses, and the live CLI preview.</td></tr>
+  <tr><td><a href="help:run">Run</a></td><td>Driving (or obeying) the sweep, ETA, and the finish popup.</td></tr>
+  <tr><td><a href="help:save-options">Save Options</a></td><td>Which report formats are written, where, and the test-record metadata.</td></tr>
+  <tr><td><a href="help:analysis">Analysis</a></td><td>Loading past runs and comparing them.</td></tr>
+</table>
+
+<h2>4 · The four-step operating path</h2>
+<p>The day-to-day flow once the app is open: wire &amp; launch, get every Setup
+check green with <span class="btn">Fix all</span>, run the full sweep, then
+collect the report set when the finish popup appears.</p>
+<div class="figure">
+  <img src="quickstart.png" width="900" alt="Four steps: 1 wire and launch, 2 Setup Fix all, 3 Run full sweep, 4 collect report.">
+  <p class="caption">Wire &amp; launch &rarr; Setup (Fix all) &rarr; Run &rarr; collect the report.</p>
+</div>
+
+<h2>5 · The control sequence</h2>
+<p>How the two PCs stay in step. They talk over a private control channel on
+<b>TCP&nbsp;5202</b> (separate from the <tt>iperf3</tt> data port 5201). For each
+case the Client tells the Server to start, both ends measure, and the Client
+collects the result before advancing — neither side moves on until the case is
+done.</p>
+<div class="figure">
+  <img src="control-sequence.png" width="900" alt="Per-case handshake: Client sends START_CASE, Server arms iperf3, both measure, Client gathers results.">
+  <p class="caption">The per-case handshake — the Client orchestrates, the Server obeys.</p>
+</div>
+
+<h2>6 · The 20-case grid</h2>
+<p>What actually gets measured: four payload sizes &times; five offered
+bandwidths = 20 cases, each run for ~30&nbsp;seconds. Tune the grid on the
+<a href="help:config">Config</a> tab.</p>
+<div class="figure">
+  <img src="case-grid.png" width="900" alt="Grid of four payloads (200/600/1000/1300 B) by five bandwidths (10/30/50/70/90 Mbps) = 20 cases.">
+  <p class="caption">Four payloads &times; five bandwidths = the 20 cases.</p>
+</div>
+
+<h2>7 · What a run produces</h2>
+<p>The output of every sweep: its own folder holding a Word <tt>.docx</tt>, an
+Excel <tt>.xlsx</tt>, and a <tt>.json</tt> sidecar by default — plus
+<tt>.pdf</tt> / <tt>.txt</tt> on request. Set it all up on
+<a href="help:save-options">Save Options</a>.</p>
+<div class="figure">
+  <img src="report-artifacts.png" width="900" alt="One run folder containing docx, xlsx, json sidecar, and optional pdf and txt.">
+  <p class="caption">One self-contained folder per run.</p>
+</div>
+
+<div class="callout note">
+  <p class="ctitle">New here? Read in order</p>
+  <p>
+  Take the <a href="help:quick-start">Quick Start</a> first, then the per-tab sections
+  in sidebar order: <a href="help:setup">Setup</a>, <a href="help:ping">Ping</a>,
+  <a href="help:config">Config</a>, <a href="help:run">Run</a>. The two references at
+  the bottom (<a href="help:fping-reference">fping</a> /
+  <a href="help:iperf3-reference">iperf3</a>) are lookup tables. Use the search box above
+  to jump straight to any term.
+  </p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
+  <!-- PingPair app mark: two endpoints (the "pair") joined by a ping
+       pulse on a slate badge. Palette: slate #1E293B/#0F172A, cyan
+       #06B6D4/#22D3EE. Kept in sync with branding.ICON_SVG and the
+       "PingPair - Brand" Figma file. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1E293B"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="256" height="256" rx="56" fill="url(#bg)"/>
+  <path d="M72 128 L110 128 L122 96 L134 158 L146 128 L184 128" fill="none"
+        stroke="#22D3EE" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="72" cy="128" r="20" fill="#06B6D4"/>
+  <circle cx="184" cy="128" r="20" fill="#06B6D4"/>
+  <circle cx="72" cy="128" r="8" fill="#ECFEFF"/>
+  <circle cx="184" cy="128" r="8" fill="#ECFEFF"/>
+</svg>

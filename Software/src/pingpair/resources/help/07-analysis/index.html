@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Analysis</title>
+</head>
+<body>
+
+<h1>Analysis — compare runs</h1>
+
+<p class="lead">
+The <b>Analysis</b> tab overlays past sweeps so you can compare them — for example
+a "before" run against an "after" run, or two different machines on the same LAN.
+</p>
+
+<div class="figure">
+  <a href="zoom:01-overview.png"><img src="01-overview.png" width="900" alt="The Analysis tab: loaded runs on the left, overlaid per-case metric lines on the right."></a>
+  <p class="caption">The Analysis tab — loaded sweeps listed on the left, with their per-case metric lines overlaid on the right for an at-a-glance before / after comparison. <span class="zoom">Click the image to enlarge.</span></p>
+</div>
+
+<h2>Loading runs</h2>
+
+<p>
+The tab reads the <tt>.json</tt> sidecars that every sweep writes. The
+<b>Source</b> folder defaults to your Save Options destination; point it somewhere
+else to compare runs saved elsewhere.
+</p>
+
+<ul>
+  <li><span class="btn">Refresh</span> — re-scan the source folder for sidecars.</li>
+  <li><span class="btn">Browse&hellip;</span> — change the source folder.</li>
+  <li><span class="btn">Add file&hellip;</span> — pull in a single sidecar from anywhere on disk (including older one-off files outside the per-sweep layout).</li>
+</ul>
+
+<h2>Plotting &amp; comparing</h2>
+
+<p>
+In <b>Loaded runs</b>, tick the runs you want to plot. Each ticked run contributes
+its per-case metrics to the chart on the right — a single-segment run adds one
+line, a multi-segment run adds one line per segment.
+</p>
+
+<ul>
+  <li><span class="btn">Select all</span> / <span class="btn">Uncheck all</span> — toggle every run at once.</li>
+  <li><span class="btn">Rename label</span> — give a run a friendlier name in the legend.</li>
+  <li><span class="btn">Remove</span> — drop a run from the list (doesn't delete the file).</li>
+</ul>
+
+<h2>Exporting a comparison</h2>
+
+<p>
+The <b>Export</b> button writes a standalone comparison report (with the overlaid
+charts) into its own folder next to your other reports — useful for sharing a
+side-by-side without the raw sweep artefacts.
+</p>
+
+</body>
+</html>

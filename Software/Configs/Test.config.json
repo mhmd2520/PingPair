@@ -1,0 +1,56 @@
+{
+  "_comment": "PingPair configuration profile.  Edit the values below and load the file via the Config tab's 'Import .config' button (or drag it into the app).  Any '_comment*' key is ignored.",
+  "_comment_usage": "Renaming this file (e.g. 'CarPair-M2M4.config.json') is encouraged \u2014 only the contents matter to PingPair, the filename is purely cosmetic in the Recent / Import dialogs.",
+  "_comment_schema": "Shape mirrors src/pingpair/config/defaults.json \u2014 every section is optional; missing sections inherit from the shipped defaults.",
+  "network": {
+    "_comment": "Network parameters.  ``server_ip`` is the listener side (Laptop A); ``client_ip`` is the side that drives the sweep (Laptop B).  ``control_port`` is the TCP channel PingPair uses to coordinate cases; ``iperf3_port`` is iperf3's own data port.",
+    "server_ip": "192.168.1.1",
+    "client_ip": "192.168.1.2",
+    "subnet_mask": "255.255.255.0",
+    "control_port": 5202,
+    "iperf3_port": 5201
+  },
+  "test_plan": {
+    "_comment": "The 20-case test grid is the cartesian product of ``payloads_bytes`` x ``bandwidths_mbps``.  Each case runs for ``duration_s`` seconds.  Use ``protocol = 'tcp'`` to drop the -u flag (no jitter / loss metrics in that mode).",
+    "payloads_bytes": [
+      256,
+      1024
+    ],
+    "bandwidths_mbps": [
+      10,
+      30,
+      50,
+      70,
+      90
+    ],
+    "duration_s": 10,
+    "interval_s": 1,
+    "protocol": "udp"
+  },
+  "fping": {
+    "_comment": "fping's inter-packet interval (ms) and extra CLI flags.  Default ``-l -s -D`` = loop forever, print summary, timestamps each line.  PingPair replaces ``-l`` with ``-c <count>`` at runtime so the process self-terminates.",
+    "interval_ms": 10,
+    "extra_args": [
+      "-l",
+      "-s",
+      "-D"
+    ]
+  },
+  "report": {
+    "_comment": "Default destination, filename pattern, and output formats for the reports written after every sweep.  These are *defaults* \u2014 the Report tab can override them per-run.",
+    "default_dir": null,
+    "filename_pattern": "PingPair_{date}_{time}",
+    "formats": [
+      "docx",
+      "xlsx",
+      "pdf",
+      "txt"
+    ],
+    "open_after_save": true
+  },
+  "ui": {
+    "_comment": "UI defaults.  ``theme`` is reserved for Phase-5 polish.",
+    "theme": "dark",
+    "live_chart": true
+  }
+}

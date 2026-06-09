@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Setup</title>
+</head>
+<body>
+
+<h1>Setup &amp; prerequisites</h1>
+
+<p class="lead">
+The <b>Setup</b> tab is the first thing you see, because it gates everything
+else: it picks this PC's role, then runs a battery of checks that confirm the
+machine can actually run a sweep. Green across the board means you're ready to
+test.
+</p>
+
+<div class="figure">
+  <a href="zoom:01-checks-overview.png"><img src="01-checks-overview.png" width="900" alt="The Setup tab with the role selector on top and the prerequisite checks all green."></a>
+  <p class="caption">The Setup tab in Server role — the role selector up top, then the ten prerequisite checks (here all green: "9 pass, 1 skipped", the skip being the optional gateway). <span class="zoom">Click the image to enlarge.</span></p>
+</div>
+
+<h2>1. Which role is this PC?</h2>
+
+<p>
+PingPair runs on <i>both</i> laptops. One plays <b>Server</b>, the other plays
+<b>Client</b> — the Client drives the 20-case schedule and the Server obeys it.
+You don't pick the role from a dialog: on first launch PingPair reads this PC's
+bound IPv4 addresses and decides automatically:
+</p>
+
+<table>
+  <tr><th>This PC is bound to&hellip;</th><th>Role chosen</th></tr>
+  <tr><td><tt>192.168.1.1</tt></td><td><b>Server</b></td></tr>
+  <tr><td><tt>192.168.1.2</tt></td><td><b>Client</b></td></tr>
+  <tr><td>neither</td><td><b>Client</b> (safe fallback) + a one-time notice</td></tr>
+</table>
+
+<p>
+A coloured banner across the top of the window always shows the current role.
+To change it, use the <b>Role</b> selector at the top of the Setup tab — Server,
+Client, or <b>Loopback</b> (a single-machine dev/smoke mode that runs both ends
+on <tt>127.0.0.1</tt>). The Run tab rebuilds itself instantly; no restart needed.
+You can switch only while idle — switching mid-sweep is blocked.
+</p>
+
+<div class="callout note">
+  <p class="ctitle">Role / IP mismatch</p>
+  <p>
+  If the saved role's expected IP isn't bound any more — say the NIC was reset
+  or the laptop moved to another LAN — an orange banner appears. PingPair never
+  silently flips your role; it asks you to either fix the IP or change the role.
+  See <a href="help:troubleshooting">Troubleshooting</a> for the exact steps.
+  </p>
+</div>
+
+<h2>2. The prerequisite checks</h2>
+
+<p>
+PingPair runs <b>ten</b> checks, in this order. Each is colour-coded:
+<b>green</b> = good, <b>yellow</b> = a warning you can usually one-click fix,
+<b>red</b> = a blocker that will stop a sweep.
+</p>
+
+<table>
+  <tr><th>#</th><th>Check</th><th>What it confirms</th></tr>
+  <tr><td>1</td><td>Python interpreter</td><td>Python 3.11+ is running the app.</td></tr>
+  <tr><td>2</td><td>Administrator privileges</td><td>The app is elevated, so the firewall / IP fixes can run. On Windows PingPair tries to auto-elevate at launch.</td></tr>
+  <tr><td>3</td><td>fping binary</td><td>The bundled <tt>fping.exe</tt> is present and responds.</td></tr>
+  <tr><td>4</td><td>iperf3 binary</td><td>The bundled <tt>iperf3.exe</tt> is present and responds.</td></tr>
+  <tr><td>5</td><td>Local NIC IP</td><td>This PC holds the canonical IP for its role (Server&nbsp;<tt>192.168.1.1</tt> / Client&nbsp;<tt>192.168.1.2</tt>).</td></tr>
+  <tr><td>6</td><td>Firewall: ICMP echo (ping)</td><td>An inbound rule lets ping through (fping's latency probes).</td></tr>
+  <tr><td>7</td><td>Firewall: iperf3 (TCP/UDP 5201)</td><td>Inbound rules allow the iperf3 data port.</td></tr>
+  <tr><td>8</td><td>Firewall: control channel (TCP 5202)</td><td>An inbound rule allows the Server&harr;Client control link.</td></tr>
+  <tr><td>9</td><td>Gateway reachable</td><td>Optional — only when a gateway is configured; pings it once. A point-to-point LAN has none, so this skips.</td></tr>
+  <tr><td>10</td><td>Wi-Fi disabled</td><td>Warns if a Wi-Fi adapter is carrying IPv4 traffic that could steal test packets from the Ethernet link.</td></tr>
+</table>
+
+<h2>3. Fixing what's not green</h2>
+
+<p>
+Most yellow/red rows carry a fix button that runs the exact command for you
+(a confirmation dialog shows the command first):
+</p>
+
+<div class="figure">
+  <a href="zoom:02-role-mismatch.png"><img src="02-role-mismatch.png" width="900" alt="A failed Local NIC IP check with a Set the correct IP button, and the orange role-mismatch banner across the top."></a>
+  <p class="caption">A red <b>Local NIC IP</b> row with its "Set the correct IP" action on the right, plus the orange role/IP-mismatch banner across the top (its "How to fix" button jumps to Troubleshooting). <span class="zoom">Click the image to enlarge.</span></p>
+</div>
+
+<ul>
+  <li><span class="btn">Set the correct IP</span> — assigns this PC's role IP to the primary Ethernet adapter via <tt>netsh</tt>.</li>
+  <li><span class="btn">Add ICMP rule</span> — adds the inbound ping firewall rule.</li>
+  <li><span class="btn">Open 5201 (TCP+UDP)</span> — adds the iperf3 data-port rules.</li>
+  <li><span class="btn">Open 5202 (TCP)</span> — adds the control-channel rule.</li>
+  <li><span class="btn">Disconnect Wi-Fi</span> — takes the Wi-Fi adapter offline for the test.</li>
+  <li><span class="btn">Restart as Administrator</span> — relaunches elevated so the other fixes become available.</li>
+</ul>
+
+<div class="callout tip">
+  <p class="ctitle">Two shortcuts</p>
+  <p>
+  <span class="btn">Fix all</span> runs every available fix in sequence and
+  shows a per-step transcript. <span class="btn">Re-check</span> re-runs all ten
+  checks — handy after fixing something outside the app.
+  </p>
+</div>
+
+<div class="callout warn">
+  <p class="ctitle">Wi-Fi is always restored</p>
+  <p>
+  If PingPair disables Wi-Fi for a test, it re-enables it automatically when you
+  close the app or click <span class="btn">Reset all settings</span>, and Windows
+  reconnects to your saved network. Even a crash is covered — the next launch
+  puts it back.
+  </p>
+</div>
+
+<h2>4. Starting over</h2>
+
+<p>
+<span class="btn">Reset all settings</span> (bottom of the Setup tab) is a
+<b>factory wipe</b>: it removes every PingPair firewall rule, reverts the primary
+Ethernet adapter to DHCP, re-enables Wi-Fi, clears all saved settings, and closes
+the app — leaving the PC the way a fresh Windows + fresh PingPair install would.
+Use it when you're done testing on a machine.
+</p>
+
+</body>
+</html>

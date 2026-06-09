@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>iperf3 reference</title>
+</head>
+<body>
+
+<h1>iperf3 3.21 — flag reference</h1>
+
+<p class="lead">
+PingPair ships iperf3 3.21 (Cygwin build) under <tt>bin\iperf3\</tt>. The flags
+below are the ones PingPair sets on either the server or the client side per case.
+</p>
+
+<h2>Server invocation (auto-spawned per case)</h2>
+<pre>iperf3 -s -i 1 -B 192.168.1.1 -1 --json</pre>
+
+<h2>Client invocation (per case)</h2>
+<pre>iperf3 -c 192.168.1.1 -B 192.168.1.2 -u -i 1 -t 30 -l &lt;payload&gt; -b &lt;bw&gt;M</pre>
+
+<h2>Flags used</h2>
+<table>
+  <tr><th>Flag</th><th>Meaning</th><th>Why PingPair uses it</th></tr>
+  <tr><td><tt>-s</tt></td>
+      <td>Run as server (listen for an incoming client).</td>
+      <td>One side per case must listen.</td></tr>
+  <tr><td><tt>-c &lt;host&gt;</tt></td>
+      <td>Run as client and connect to <i>host</i>.</td>
+      <td>Drives the actual data transfer for the case.</td></tr>
+  <tr><td><tt>-B &lt;ip&gt;</tt></td>
+      <td>Bind to a specific local IP for sending/receiving.</td>
+      <td>Pins the Server to 192.168.1.1 and the Client source to 192.168.1.2. Dropped in loopback mode where both endpoints are 127.0.0.1.</td></tr>
+  <tr><td><tt>-u</tt></td>
+      <td>Use UDP (not TCP).</td>
+      <td>The procedure mandates UDP — gives measurable jitter and packet-loss numbers, which TCP hides via retransmission.</td></tr>
+  <tr><td><tt>-i &lt;sec&gt;</tt></td>
+      <td>Print interval reports every <i>sec</i> seconds.</td>
+      <td>1-second intervals — used by the live throughput chart.</td></tr>
+  <tr><td><tt>-t &lt;sec&gt;</tt></td>
+      <td>Time the test for <i>sec</i> seconds.</td>
+      <td>30&nbsp;s per case (the procedure value).</td></tr>
+  <tr><td><tt>-l &lt;bytes&gt;</tt></td>
+      <td>Set the read/write buffer size = the UDP datagram payload.</td>
+      <td>Per-case payload from the 4-value sweep: 200, 600, 1000, 1300 bytes.</td></tr>
+  <tr><td><tt>-b &lt;rate&gt;M</tt></td>
+      <td>Cap the sender's bitrate at <i>rate</i> Mbits/s.</td>
+      <td>Per-case bandwidth from the 5-value sweep: 10, 30, 50, 70, 90 Mbps.</td></tr>
+  <tr><td><tt>--json</tt></td>
+      <td>Print all output as one JSON blob at end of run instead of text.</td>
+      <td>Used on the Server side so the JSON can be archived in the report sidecar. The Client side uses text mode so live per-second output appears on the chart.</td></tr>
+  <tr><td><tt>-1</tt></td>
+      <td>Server: handle one client connection then exit.</td>
+      <td>Avoids stale listening sockets between cases — without this, a force-terminated server can leave port 5201 half-closed and the next case fails with "unable to receive control message".</td></tr>
+</table>
+
+</body>
+</html>

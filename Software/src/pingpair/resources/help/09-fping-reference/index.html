@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>fping reference</title>
+</head>
+<body>
+
+<h1>fping 5.5 — flag reference</h1>
+
+<p class="lead">
+PingPair ships fping 5.5 (Cygwin build) under <tt>bin\fping\</tt>. The flags
+below are the ones PingPair sets when running a case.
+</p>
+
+<h2>Command PingPair builds (per case)</h2>
+<pre>fping &lt;target&gt; -S &lt;source&gt; -p 10 -c &lt;count&gt; -s -D</pre>
+<p>Example for case <code>#01 payload=200B bw=10Mbps</code> on a real LAN:</p>
+<pre>fping 192.168.1.1 -S 192.168.1.2 -p 10 -c 3000 -s -D</pre>
+
+<h2>Flags used</h2>
+<table>
+  <tr><th>Flag</th><th>Meaning</th><th>Why PingPair uses it</th></tr>
+  <tr><td><tt>-c &lt;count&gt;</tt></td>
+      <td>Send exactly <i>count</i> ICMP echo requests, then exit.</td>
+      <td>Lets fping self-terminate at the end of a case so it can flush its summary block. PingPair sets count = duration_s &times; 1000 &divide; interval_ms.</td></tr>
+  <tr><td><tt>-p &lt;ms&gt;</tt></td>
+      <td>Interval between consecutive pings to the same target, in milliseconds.</td>
+      <td>10&nbsp;ms (the procedure value). Note: Windows' default timer granularity is ~15.6&nbsp;ms, so the actual interval is ~16&nbsp;ms.</td></tr>
+  <tr><td><tt>-l</tt></td>
+      <td>"Loop forever" mode — without <tt>-c</tt> this never exits on its own.</td>
+      <td>PingPair only uses this in the preview CLI string (to match the written procedure verbatim); at runtime it substitutes <tt>-c &lt;count&gt;</tt> for clean termination.</td></tr>
+  <tr><td><tt>-s</tt></td>
+      <td>Print summary statistics (totals, min/avg/max RTT, elapsed time) when fping ends.</td>
+      <td>This is what PingPair's report parser reads to fill in the Min/Avg/Max latency columns.</td></tr>
+  <tr><td><tt>-D</tt></td>
+      <td>Prefix each line with a high-precision Unix timestamp.</td>
+      <td>Used by the live-latency chart in the Run tab.</td></tr>
+  <tr><td><tt>-S &lt;ip&gt;</tt></td>
+      <td>Set the source address for outbound packets.</td>
+      <td>In two-machine mode, pins the Client side's source to 192.168.1.2. Skipped in loopback mode (both sides are 127.0.0.1).</td></tr>
+</table>
+
+<h2>Exit / signal behaviour</h2>
+<p>
+With <tt>-s -c &lt;count&gt;</tt> fping exits cleanly with rc=0 and prints its
+summary to <b>stderr</b> (not stdout — that's an fping &ge; 4.0 change).
+PingPair's parser combines both streams before extracting metrics, so the
+summary always lands in the report.
+</p>
+
+</body>
+</html>
