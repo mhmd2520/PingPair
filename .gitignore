@@ -31,9 +31,12 @@ venv/
 /Software/dist/
 
 # ── Generated run output ────────────────────────────────────────────
+# PingPair auto-creates Reports/ and Configs/ next to the app at runtime;
+# they are never part of the shipped source tree.
 Reports/
 Software/Reports/
-Configs/Template.json
+Configs/
+Software/Configs/
 
 # ── OS junk ─────────────────────────────────────────────────────────
 Thumbs.db

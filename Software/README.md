@@ -1,17 +1,43 @@
-# PingPair
+# PingPair — user guide
 
 Automated LAN characterization between two Windows machines using
-**fping 5.5** and **iperf3 3.21**. Runs the 20-case test grid from
-`Test Procedure.txt` hands-free and produces a Word/PDF/TXT report
-matching `Table-1.PNG`.
+**fping 5.5** (latency / loss) and **iperf3 3.21** (throughput / jitter /
+loss). PingPair runs a fixed 20-case test grid hands-free and produces a
+Word + Excel report (PDF / TXT optional) plus the JSON config that produced
+it.
 
 The two endpoints can be physical laptops, Windows VMs on a private LAN
-segment, or — the eventual production target — embedded computers on a
-train's on-board network. The tool can't tell them apart as long as both
-sides are reachable on a layer-2 broadcast domain.
+segment, or embedded computers on a train's on-board network. The tool
+treats them the same as long as both sides share a layer-2 broadcast domain.
 
-> See `..\CLAUDE.md` for the architectural decisions and `..\plan.md` for
-> the phased implementation plan.
+> **Just want to run it?** Download the packaged build from the
+> [Releases](https://github.com/mhmd2520/PingPair/releases) page, unzip, and
+> run `PingPair.exe` — no Python needed. This guide also covers running from
+> source (§1).
+
+## The test methodology
+
+Each run sweeps a **4 × 5 grid** — every payload size against every
+bandwidth target:
+
+| Payload (bytes) | × | Bandwidth (Mbps) |
+|---|---|---|
+| 200, 600, 1000, 1300 | × | 10, 30, 50, 70, 90 |
+
+= **20 cases**, run back-to-back with no manual intervention. For each case
+the Server side runs `iperf3 -s` and the Client side fires `iperf3 -c` (UDP,
+~30 s at that case's payload + bandwidth) alongside `fping` for latency and
+loss; then the next case starts. Each case's results — throughput, jitter,
+loss, and min / avg / max latency — fill one row of the 8-column results
+table that becomes the report.
+
+```
+Server  192.168.1.1   ──  Ethernet / LAN segment  ──  Client  192.168.1.2
+  iperf3 -s                                            iperf3 -c  +  fping
+```
+
+(All 20 cases, the payload/bandwidth values, and the per-case duration are
+fully editable on the **Config** tab — see §2.4c.)
 
 ---
 
@@ -53,50 +79,37 @@ Some Python wheels (PySide6, numpy) need the Microsoft Visual C++
 If `pip install` later complains about missing DLLs:
 <https://aka.ms/vs/17/release/vc_redist.x64.exe>.
 
-### 1.3 Get the project onto the machine
+### 1.3 Get PingPair onto the machine
 
-You have three options:
+Two ways, depending on whether you want the ready-to-run app or the source.
 
-**a) Shared folder (recommended for VMs):** the host directory
-`D:\Windows 10 VM\Shared-Folder\PingPair-PrivDev\` is already shared with
-both VMs via VMware's Shared Folders feature. **However, CMD can't `cd`
-into a UNC path** (`\\vmware-host\…`) — running `cd \\vmware-host\Shared Folders\…`
-gives "CMD does not support UNC paths as current directories." The
-solution is to map the share to a drive letter once per VM:
+**a) Packaged build (recommended — no Python needed).** Download the latest
+`PingPair-<version>-win64.zip` from the
+[Releases](https://github.com/mhmd2520/PingPair/releases) page and unzip it
+anywhere (e.g. `C:\PingPair\`). You'll get `PingPair.exe` next to its
+`_internal\` runtime folder — that's the whole app. It bundles its own
+Python, `fping`, and `iperf3`, so you can **skip §1.1, §1.5, and §1.6** and
+go straight to §1.4 (the network).
 
-```
-net use Z: "\\vmware-host\Shared Folders\Shared-Folder\PingPair-PrivDev" /persistent:yes
-```
-
-`/persistent:yes` makes the mapping survive reboot. Pick whatever drive
-letter is free; this README assumes `Z:`. Verify:
+**b) Run from source.** Clone the repository (or download the *source* ZIP
+from the same Releases page) to a local path:
 
 ```
-Z:
-dir
+git clone https://github.com/mhmd2520/PingPair.git C:\PingPair
 ```
-You should see `Software\`, `CLAUDE.md`, `plan.md`, `Network-Tools\`,
-`Results\`, `Concept-Design.txt`, `Test Procedure.txt`, `Table-1.PNG`.
 
-From now on, on **the VMs**, the project root is `Z:\` (the share is
-mapped straight at the `PingPair-PrivDev` subfolder) and the package
-lives at `Z:\Software\`.
+The Python package lives under `Software\` — that's the folder the
+source commands in this guide run from.
 
-**b) Copy the folder:** copy `D:\Windows 10 VM\Shared-Folder\PingPair-PrivDev\`
-to a local path on the new machine (e.g. `C:\PingPair-PrivDev\`). Faster
-I/O than the share but you have to re-copy when source changes.
-
-**c) Git clone:** once the project lives in a Git repo, `git clone`.
-
-> **Path conventions used throughout this README.** When a command starts
-> with `cd "D:\Windows 10 VM\Shared-Folder\PingPair-PrivDev\Software"` it's
-> the **host machine** path. When you're inside a **VM** that mapped the
-> share as `Z:`, use `cd Z:\Software` instead. Both refer to the same
-> physical folder.
+> **On a VM**, the install steps are identical to a physical machine — put
+> the build (or source) inside the guest. The only VM-specific part is the
+> *network* (§1.4): attach both VMs to the same **isolated/internal virtual
+> switch**, not NAT or Bridged. Copying the unzipped folder into the guest, a
+> shared folder, or a guest-side `git clone` all work equally well.
 
 ### 1.4 Configure the network
 
-Per **Test Procedure.txt** the canonical addresses are:
+PingPair's canonical point-to-point addresses are:
 
 | Role | IPv4 | Subnet |
 |---|---|---|
@@ -130,53 +143,38 @@ Four `Reply from 192.168.1.1` lines = LAN is good. If pings fail, the
 problem is the firewall or the virtual switch, not PingPair — fix it
 before continuing.
 
-### 1.5 Install PingPair's dependencies
+### 1.5 Install PingPair's dependencies (source only)
 
-From an **Administrator** Command Prompt (so firewall rules can be
-added later via the GUI). The project path depends on which machine
-you're on:
+*Skip this if you downloaded the packaged build — it ships its own
+dependencies.*
 
-**On a VM that mapped the share as Z:**
+From an **Administrator** Command Prompt (so the GUI can add firewall rules
+later), in the `Software\` folder of your checkout:
+
 ```
-Z:
 cd Software
-pip install -e ".[dev]"
+pip install -e .
 ```
 
-**On the host machine (the native source tree):**
-```
-cd "D:\PingPair-PrivDev\Software"
-pip install -e ".[dev]"
-```
-
-`-e` makes it an editable install — code changes in `src\pingpair\` take
-effect immediately without re-installing. `.[dev]` adds pytest, ruff,
-mypy. The download is ~150 MB (PySide6 is the big one).
-
-> **Single-VM tip:** because both VMs share the same `Software\` folder,
-> running `pip install -e ".[dev]"` on **one** VM also makes the editable
-> install visible on the other (the .egg-link points into the share).
-> But each VM still needs its own Python install, so you'll typically
-> run `pip install` once per VM.
+`-e` makes it an editable install — edits under `src\pingpair\` take effect
+without re-installing. The download is ~150 MB (PySide6 is the big one). Use
+`pip install -e ".[dev]"` instead if you also want the test / lint tooling
+(pytest, ruff, mypy).
 
 ### 1.6 Verify the installation
 
-Run the test suite — every test should pass. The run takes ~60-80 s
-(the GUI / Qt-backed tests dominate):
-```
-python -m pytest -v
-```
-
-Run the headless prerequisite checker — gives a one-glance status of
-Python / fping / iperf3 / NIC IP / firewall rules:
+Run the headless prerequisite checker — a one-glance status of
+Python / fping / iperf3 / NIC IP / firewall rules. It exits non-zero on any
+FAIL, so it doubles as a smoke check:
 ```
 python -m pingpair --check-prereqs
 ```
 
-You should see nine rows — Python, Administrator, fping, iperf3,
-Local NIC IP, three firewall rules, and Wi-Fi disabled. Anything
-that's red or yellow has a "Fix this for me" button waiting in the
-GUI's Setup tab — see §2.3.
+(Packaged build: run `PingPair.exe --check-prereqs` from the unzip folder
+instead.) You should see nine rows — Python, Administrator, fping, iperf3,
+Local NIC IP, three firewall rules, and Wi-Fi disabled. Anything that's red
+or yellow has a "Fix this for me" button waiting in the GUI's Setup tab —
+see §2.3.
 
 ---
 
@@ -190,9 +188,9 @@ sweep across the LAN.
 Open an **Administrator** Command Prompt (so the Setup tab's Fix
 buttons can call `netsh advfirewall`).
 
-On **VM-1 (Server, 192.168.1.1)**, assuming the share is mapped as `Z:`:
+On **VM-1 (Server, 192.168.1.1)** — packaged build: double-click
+`PingPair.exe` (or launch it from an elevated CMD). From source:
 ```
-Z:
 cd Software
 python -m pingpair
 ```
@@ -405,7 +403,7 @@ What happens next:
    the row in the sweep table fills in with throughput / jitter / loss /
    min / avg / max latency.
 3. After all (selected) rows are green/red, the bottom status reads
-   `Sweep finished in 15m 50s — 20/20 cases ok · saved 3 report file(s) to Z:\Software\Reports\PingPair_2026-05-10_HHMMSS`.
+   `Sweep finished in 15m 50s — 20/20 cases ok · saved 3 report file(s) to Reports\PingPair_2026-05-10_HHMMSS`.
    The file count is 3 (`.docx` + `.xlsx` + `.json` sidecar) by default —
    add `.pdf` / `.txt` by ticking the boxes on the Save Options tab.
 
@@ -523,8 +521,9 @@ default ON).
 
 The **Config tab** (third from the left) is a full editor for the
 test plan that the Run tab sweeps across. The default plan is the
-20-case grid from `Test Procedure.txt` (4 payloads × 5 bandwidths),
-but you can override it with any payload list, bandwidth list,
+standard 20-case grid (4 payloads × 5 bandwidths; see "The test
+methodology" at the top), but you can override it with any payload
+list, bandwidth list,
 duration, protocol, network IPs, ports, or fping flags — and save
 the result as a named `.json` profile you can re-load any time.
 
@@ -654,9 +653,9 @@ Each single-sweep report carries:
   + any populated **Test-record metadata** (technician, customer,
   hardware S/N, environment, record ID) — these stay populated
   across launches via QSettings.
-- The **Performance Metrics** table — exactly the 8-column shape
-  from `Table-1.PNG` (Payload / BW Pushed / Throughput Received /
-  Jitter / Loss / Min / Avg / Max latency).
+- The **Performance Metrics** table — the 8-column results shape
+  (Payload / BW Pushed / Throughput Received / Jitter / Loss /
+  Min / Avg / Max latency).
 - A **Per-case detail** section with status, return codes, error
   notes, and the exact iperf3/fping CLI strings used for that case.
 
@@ -731,13 +730,11 @@ launches via QSettings.
 
 ## 3. Day-to-day commands
 
-All commands run from the project's `Software\` folder. On a VM with the
-share mapped as `Z:`, that's `Z:\Software`. On the host it's
-`D:\PingPair-PrivDev\Software` (or wherever a local copy is put).
+From source, run these from the `Software\` folder of your checkout. With the
+packaged build, double-click `PingPair.exe` — or append the same flags to it
+(e.g. `PingPair.exe --loopback`).
 
 ```cmd
-:: change to project folder (VM)
-Z:
 cd Software
 
 :: launch the GUI
@@ -746,15 +743,8 @@ python -m pingpair
 :: headless prereq check (CI-friendly; non-zero exit on any FAIL)
 python -m pingpair --check-prereqs
 
-:: loopback dev mode (skip the role picker, force 127.0.0.1)
+:: loopback mode (skip the role picker, run both sides on 127.0.0.1)
 python -m pingpair --loopback
-
-:: unit tests
-python -m pytest -v
-
-:: lint / format
-python -m ruff check src
-python -m ruff format src
 ```
 
 ---
@@ -766,13 +756,18 @@ Software\
 ├── bin\
 │   ├── fping\          fping.exe + cygwin1.dll (2020 build)
 │   └── iperf3\         iperf3.exe (3.21) + cygwin1.dll (2026-03 build) + cygz.dll + cygcrypto-3.dll
-├── src\pingpair\       Python package (GUI + core + reporting)
-├── Reports\            runtime output (gitignored)
-├── tests\              pytest suite
+├── src\pingpair\       the application (GUI + core + reporting)
+├── Reports\            run output — auto-created, not in source control
+├── Configs\            saved test-plan profiles — auto-created on first use
 ├── requirements.txt
 ├── pyproject.toml
+├── THIRD_PARTY_LICENSES.md
 └── README.md           (you are here)
 ```
+
+In the **packaged build** the same `bin\`, `Reports\`, and `Configs\` folders
+sit next to `PingPair.exe` (the runtime lives in the adjacent `_internal\`
+folder) — so your reports and saved profiles are right beside the app.
 
 The two binaries each ship a different `cygwin1.dll`, which is why they
 live in separate sibling folders under `bin\` instead of being merged.
@@ -785,11 +780,7 @@ its own folder.
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| `py -3.11 ... No suitable Python runtime found` | Python not installed, or `winget` install left an inconsistent state | Use the python.org installer (§1.1), tick "Add python.exe to PATH", then close and reopen the terminal. |
-| `cd \\vmware-host\Shared Folders\…` → "CMD does not support UNC paths as current directories" | CMD inherently can't `cd` into UNC paths | Map the share to a drive letter once: `net use Z: "\\vmware-host\Shared Folders\Shared-Folder\PingPair-PrivDev" /persistent:yes` (§1.3). |
-| `cd "D:\PingPair-PrivDev\..."` → "The system cannot find the drive specified" | The `D:` drive only exists on the host, not inside a VM | On a VM, use the mapped `Z:` path (§1.3). |
-| In an elevated (Run-as-Administrator) CMD: `Z:` → "The system cannot find the drive specified", even though `Z:` works in a regular CMD | UAC isolation: drives mapped with `net use` from a non-elevated CMD are invisible to elevated processes (different logon session) | **Quick fix:** re-run `net use Z: "\\vmware-host\Shared Folders\Shared-Folder\PingPair-PrivDev" /persistent:yes` once from the elevated CMD — that maps the drive for the elevated context too. **Permanent fix:** the registry value `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\EnableLinkedConnections=1` (DWORD) makes non-elevated mappings visible to elevated processes after the next **logon** (the change takes effect at sign-in, not immediately — log off and back on, or reboot). |
-| `'pytest' is not recognized` | Scripts dir not on PATH | Use `python -m pytest` instead. |
+| `py -3.11 ... No suitable Python runtime found` | Python not installed, or `winget` install left an inconsistent state | Use the python.org installer (§1.1), tick "Add python.exe to PATH", then close and reopen the terminal. (Source install only — the packaged build needs no Python.) |
 | Setup tab: "Local NIC IP" is FAIL | Static IP not set, or NIC is on the wrong subnet | Click the row's **Set the correct IP** button (auto-detects the primary Ethernet adapter and runs `netsh interface ipv4 set address` for the role's canonical IP — see §2.3). Falls back to opening `ncpa.cpl` if the adapter can't be detected or the role is Loopback. |
 | Top banner shows "Server role" / "Client role" but the orange Setup tab banner says "expected 192.168.1.X to be bound, but it isn't" | The saved role doesn't match the currently bound NIC IP — typical after a NIC reset, an IP change, or moving the laptop to a different LAN. The role itself is **never auto-flipped** to avoid silent surprises. | Click **Set the correct IP** on the Local NIC IP FAIL row to fix the IP for the saved role, or change the role on the Setup tab (Apply role) if this PC is now meant to play the other side. |
 | Setup tab: firewall rows stay yellow after pressing Fix | Not running as Administrator | Close the app, relaunch from an elevated CMD: `python -m pingpair`. |
@@ -809,5 +800,6 @@ its own folder.
 
 ---
 
-For deeper architectural background see `..\CLAUDE.md`; for the phased
-roadmap and acceptance criteria see `..\plan.md`.
+For the release history see [`../CHANGELOG.md`](../CHANGELOG.md). Questions,
+bug reports, and feature requests:
+<https://github.com/mhmd2520/PingPair/issues>.

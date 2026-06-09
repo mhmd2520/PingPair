@@ -57,15 +57,18 @@ Releases feed.
 
 ## Run from source
 
+Most people should just download the [Release](https://github.com/mhmd2520/PingPair/releases)
+— it needs no Python. To run from this source tree instead:
+
 ```cmd
 cd Software
-pip install -e ".[dev]"
-python -m pytest -v
+pip install -e .
 python -m pingpair
 ```
 
-Requires Python 3.11+. Full setup — static IPs, firewall, the two-machine
-run, every tab — is in **[`Software/README.md`](Software/README.md)**.
+Requires Python 3.11+. The bundled `fping` / `iperf3` in `Software/bin/`
+are used as-is — no extra setup. Full instructions — static IPs, firewall,
+the two-machine run, every tab — are in **[`Software/README.md`](Software/README.md)**.
 
 ## Tech stack
 
@@ -75,9 +78,20 @@ openpyxl · pydantic. Bundled `fping 5.5` + `iperf3 3.21` (Windows/Cygwin).
 ## Repository layout
 
 ```
-Software/        Python package (GUI + core + reporting), tests, bundled binaries
-CHANGELOG.md     release history (Keep a Changelog)
+Software/
+├─ src/pingpair/        the application (GUI + core + reporting)
+├─ bin/                 bundled fping 5.5 + iperf3 3.21 (Windows/Cygwin)
+├─ README.md            full user guide — setup, two-machine run, every tab
+├─ THIRD_PARTY_LICENSES.md
+├─ pyproject.toml       run-from-source metadata + dependencies
+└─ requirements.txt
+CHANGELOG.md            release history (Keep a Changelog)
+LICENSE                 license terms
 ```
+
+The runnable, no-Python build lives on the
+[Releases](https://github.com/mhmd2520/PingPair/releases) page, not in the
+source tree.
 
 ## License
 
