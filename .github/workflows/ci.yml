@@ -39,9 +39,15 @@ jobs:
       # this to a blocking step once that backlog is cleared.
       - name: Ruff (advisory)
         continue-on-error: true
-        run: python -m ruff check src tests
+        run: python -m ruff check src @(if (Test-Path tests) { 'tests' })
 
+      # The public export ships the runnable app only — no tests/ (allowlist
+      # decision, 2026-06-09). This one workflow serves both repos: the private
+      # dev repo runs the full suite as the hard gate; the public checkout
+      # skips it instead of failing every push.
       - name: Pytest
         env:
           QT_QPA_PLATFORM: offscreen
-        run: python -m pytest tests/ -q
+        run: |
+          if (Test-Path tests) { python -m pytest tests/ -q }
+          else { Write-Host 'tests/ not in this checkout (public export) — skipping the suite.' }
