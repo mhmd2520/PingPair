@@ -162,10 +162,20 @@ and the gallery `data-dark`/`data-light` + lightbox `data-full` mechanism are al
 preserved (verified by a `sync-site-release.ps1 -WhatIf` dry run + a Playwright
 render pass across all four pages, desktop + mobile, 0 console errors).
 
-**Remaining to go live (one-time, mostly outside this repo):**
-1. Run the export + push so the public repo gets `site/` + `.github/` (above).
-2. Public repo → **Settings → Pages → Source = GitHub Actions** (the deploy
-   workflow then runs on the next push to `site/**`).
-3. After the first deploy, set **Custom domain = `www.pingpair.app`** and tick
-   **Enforce HTTPS** (the cert can take a few hours; `.app` is HSTS-preloaded).
-4. Set the Hostinger DNS records (next section) and the email forward.
+## LIVE (2026-06-10) 🎉
+
+**The site is deployed and serving at <https://www.pingpair.app/>.** Go-live
+steps completed 2026-06-10:
+1. Allowlist export + push to the public repo (`site/` + `.github/` +
+   `.gitattributes`). **Exporter fix shipped the same day:** robocopy `/XD IMG`
+   matched `site\assets\img` at depth and silently dropped every image —
+   `'IMG'` was removed from `$ExcludeDirs` (the root drop-zone isn't on the
+   allowlist anyway).
+2. Pages enabled via API (`build_type=workflow`), deploy workflow dispatched →
+   green.
+3. Custom domain `www.pingpair.app` set + **Enforce HTTPS** on (the cert was
+   issued immediately because the Hostinger DNS records were already in place).
+4. Verified live: all 4 pages + assets/fonts/sample-report 200 over HTTPS,
+   apex `pingpair.app` → 301 → `www.`, custom 404 served.
+
+Still optional: the Hostinger email forward for `hello@pingpair.app`.
