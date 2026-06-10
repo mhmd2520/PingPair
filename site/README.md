@@ -16,10 +16,13 @@ site/
 ├── styles.css        # "Signal Instrument" design system — mirrors the app's Dark theme + logo palette
 ├── app.js            # progressive enhancement only: scroll-reveal + sticky-nav + gallery Light/Dark toggle + lightbox
 ├── CNAME             # custom domain for GitHub Pages: www.pingpair.app
-├── robots.txt        # allow-all + sitemap pointer
+├── robots.txt        # allow-all (minus README/CNAME) + sitemap pointer
 ├── sitemap.xml       # W5 — home / docs / changelog
+├── favicon.ico       # multi-res 16–64 px (legacy + Google-search fallback)
 └── assets/
     ├── logo.svg      # the app mark (copied from Software/src/pingpair/resources/logo.svg)
+    ├── favicon-{16,32,192,512}.png  # ┐ SEO favicon set + iOS icon — REGENERATE from
+    ├── apple-touch-icon.png         # ┘ logo.svg via publish\make-site-favicons.py
     ├── fonts/        # bundled Inter (same fonts the app ships — no external CDN)
     ├── img/
     │   ├── hero-run.png         # hero screenshot (Run tab, Dark)
@@ -56,7 +59,10 @@ the logo rasterizes headless).
 The download page carries machine-updatable sentinel markers
 (`<!--@ver-->…<!--/@ver-->`, `<!--@size-->`, `<!--@sha256-->`) plus two anchors
 (`id="dl-asset"`, `id="dl-checksum-file"`) whose hrefs are rebuilt from the
-version. **`publish/sync-site-release.ps1`** rewrites all of them:
+version. The index page's SoftwareApplication **JSON-LD** also carries the
+version (`"softwareVersion"` / `"downloadUrl"` keys — HTML comment sentinels
+can't live inside JSON). **`publish/sync-site-release.ps1`** rewrites all of
+them:
 
 ```powershell
 pwsh -File publish\sync-site-release.ps1 -Version 0.1.0 `

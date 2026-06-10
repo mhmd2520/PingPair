@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
 
+# Helper/source-only files that ship with the static export — keep them out of
+# the index (don't disallow app.js/styles.css: Google needs those to render).
+Disallow: /README.md
+Disallow: /CNAME
+
 Sitemap: https://www.pingpair.app/sitemap.xml

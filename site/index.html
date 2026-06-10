@@ -6,7 +6,22 @@
   <title>PingPair — Automated two-laptop LAN characterization for Windows</title>
   <meta name="description" content="PingPair runs the full 20-case latency and throughput test between two Windows laptops with fping and iperf3, then hands you a ready-to-file Word, PDF and Excel report. Free to use, runs entirely offline." />
   <link rel="canonical" href="https://www.pingpair.app/" />
-  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+
+  <!-- Favicons: real raster files at stable URLs so Google can show the icon in
+       search results (SVG for modern browsers; ICO + PNGs cover legacy, Android
+       home-screen, and Google's favicon pipeline). Regenerate from logo.svg via
+       publish\make-site-favicons.py whenever the mark changes. -->
+  <link rel="icon" type="image/svg+xml" href="/assets/logo.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+  <meta name="theme-color" content="#0b1220" />
+  <meta name="application-name" content="PingPair" />
+  <meta name="apple-mobile-web-app-title" content="PingPair" />
 
   <!-- Open Graph / Twitter so shared links unfurl with the brand -->
   <meta property="og:type" content="website" />
@@ -19,6 +34,39 @@
   <meta name="twitter:title" content="PingPair — Automated LAN characterization for Windows" />
   <meta name="twitter:description" content="One click runs the full 20-case latency + throughput test between two laptops and produces a ready-to-file report." />
   <meta name="twitter:image" content="https://www.pingpair.app/assets/img/hero-run.png" />
+
+  <!-- JSON-LD: WebSite schema, so Google shows "PingPair" as the site name
+       beside the favicon in results instead of the bare domain. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "PingPair",
+    "url": "https://www.pingpair.app/"
+  }
+  </script>
+  <!-- JSON-LD: SoftwareApplication schema for software rich-result eligibility.
+       The HTML-comment release sentinels can't live inside JSON, so
+       publish\sync-site-release.ps1 rewrites the "softwareVersion" and
+       "downloadUrl" values directly on every release — keep those key names. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "PingPair",
+    "operatingSystem": "Windows 10, Windows 11",
+    "applicationCategory": "UtilitiesApplication",
+    "description": "PingPair runs the full 20-case latency and throughput test between two Windows laptops with fping and iperf3, then produces a ready-to-file Word, PDF and Excel report. Free to use, runs entirely offline.",
+    "url": "https://www.pingpair.app/",
+    "image": "https://www.pingpair.app/assets/favicon-512.png",
+    "screenshot": "https://www.pingpair.app/assets/img/hero-run.png",
+    "softwareVersion": "0.1.0",
+    "downloadUrl": "https://github.com/mhmd2520/PingPair/releases/download/v0.1.0/PingPair-0.1.0-win64.zip",
+    "releaseNotes": "https://www.pingpair.app/changelog.html",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": { "@type": "Person", "name": "Mohamed Khaled", "url": "https://mhmd2520.com/" }
+  }
+  </script>
 
   <!-- Flip on JS-only enhancements (scroll-reveal) before first paint so the
        page never flashes hidden content when JavaScript is off. -->
