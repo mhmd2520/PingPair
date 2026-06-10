@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Changelog — PingPair</title>
+  <meta name="description" content="Release history for PingPair, following Keep a Changelog and Semantic Versioning." />
+  <link rel="canonical" href="https://www.pingpair.app/changelog.html" />
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="PingPair changelog" />
+  <meta property="og:description" content="Release history for PingPair." />
+  <meta property="og:url" content="https://www.pingpair.app/changelog.html" />
+  <meta property="og:image" content="https://www.pingpair.app/assets/img/hero-run.png" />
+  <script>document.documentElement.classList.add("js");</script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ===================== Header ===================== -->
+  <header class="site-header" id="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="/" aria-label="PingPair home">
+        <img src="assets/logo.svg" alt="PingPair logo" />
+        <span><span class="word-ping">Ping</span><span class="word-pair">Pair</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#how">How it works</a>
+        <a href="index.html#screenshots">Screenshots</a>
+        <a href="docs.html">Docs</a>
+        <a href="changelog.html">Changelog</a>
+        <a href="https://github.com/mhmd2520/PingPair">GitHub</a>
+        <a class="nav-cta" href="index.html#download">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap doc-main">
+    <article class="doc-body" style="max-width: 820px; margin: 0 auto;">
+      <span class="eyebrow">Release notes</span>
+      <h1>Changelog</h1>
+      <p class="doc-lead">Notable changes to PingPair. The format follows
+        <a href="https://keepachangelog.com/en/1.1.0/">Keep a Changelog</a>; releases use
+        <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>. The full source-level history
+        lives in <a href="https://github.com/mhmd2520/PingPair/blob/main/CHANGELOG.md">CHANGELOG.md</a>.</p>
+
+      <!-- @changelog:start — releases below are kept in sync with CHANGELOG.md -->
+      <section class="cl-release">
+        <h2><span class="ver">0.1.0</span> <span class="cl-date">2026-06-09</span></h2>
+        <p>First public release.</p>
+
+        <div class="cl-group">
+          <h3><span class="cl-tag cl-added">Added</span></h3>
+          <ul>
+            <li>Automated 20-case Server/Client LAN sweep (fping + iperf3) with Word / Excel / PDF / TXT
+              reports and a JSON sidecar per run.</li>
+            <li>Setup prerequisite checker with one-click fixes, role auto-detect, Config test-plan editor,
+              Analysis comparison/diff tab, Help guide, and theming.</li>
+            <li>In-app updater: "Check for updates", an every-launch reminder with an opt-out, and
+              "Download &amp; install" that fetches the new build from the GitHub release, verifies its
+              SHA-256, swaps the install, and relaunches — with a live speed/ETA readout and a cancel button.</li>
+            <li>About tab reorganized into four cards (About / Updates / Credits &amp; License / Diagnostics).</li>
+            <li>The PingPair logo now appears in the header of every Word and PDF report.</li>
+            <li>Packaging: top-level <code>LICENSE</code>, expanded third-party license notices, and this changelog.</li>
+          </ul>
+        </div>
+
+        <div class="cl-group">
+          <h3><span class="cl-tag cl-changed">Changed</span></h3>
+          <ul>
+            <li>Download streamed in 1 MiB chunks (was 256 KiB) for faster transfer.</li>
+            <li>The Analysis tab's <strong>Export comparison report</strong> now writes a single
+              self-contained folder with consistently sized wide charts.</li>
+            <li>A sweep is now blocked while Wi-Fi is connected to the test subnet, and the Ethernet adapter
+              is reverted to DHCP when the app closes.</li>
+          </ul>
+        </div>
+
+        <div class="cl-group">
+          <h3><span class="cl-tag cl-security">Security</span></h3>
+          <ul>
+            <li>Update download refuses an <code>https</code>→<code>http</code> downgrade, on top of the
+              mandatory SHA-256 check. The bundle is unsigned for v1 — HTTPS + SHA-256 is the integrity story.</li>
+            <li>All elevated system-tool calls (<code>netsh</code> / <code>ping</code> / <code>icacls</code>)
+              are invoked by absolute System32 path, removing a binary-planting privilege-escalation surface.</li>
+            <li>The NIC override is validated as an IPv4 literal before it reaches <code>netsh</code>; the
+              report filename pattern is sanitized so it can't write outside the Reports folder.</li>
+          </ul>
+        </div>
+
+        <div class="cl-group">
+          <h3><span class="cl-tag cl-fixed">Fixed</span></h3>
+          <ul>
+            <li>Self-update now reliably applies and relaunches.</li>
+            <li>Closing the window mid-download no longer freezes the app.</li>
+            <li>A 100%-loss case no longer renders <code>nan</code> in latency columns or skews the summary —
+              those latencies now show as "—".</li>
+            <li>The Analysis tab's <strong>Export comparison report</strong> now works in every format.</li>
+            <li>iperf3 connection errors are recorded as a failed case instead of a misleading 0 Mbps result.</li>
+            <li>The server no longer stalls ~10 seconds when a client disconnects mid-case.</li>
+            <li>"Reset to defaults" on Save Options restores Word + Excel only (the documented default).</li>
+            <li>The Analysis Diff tab's hint banner is now readable on the Light theme.</li>
+          </ul>
+        </div>
+      </section>
+      <!-- @changelog:end -->
+
+      <p class="doc-foot-note">
+        See every release on the
+        <a href="https://github.com/mhmd2520/PingPair/releases">GitHub Releases</a> page.
+      </p>
+    </article>
+  </main>
+
+  <!-- ===================== Footer ===================== -->
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <div class="brand">
+        <img src="assets/logo.svg" alt="" width="24" height="24" />
+        <span><span class="word-ping">Ping</span><span class="word-pair">Pair</span></span>
+        <span class="footer-ver">v<!--@ver-->0.1.0<!--/@ver--></span>
+      </div>
+      <nav class="footer-links">
+        <a href="index.html#features">Features</a>
+        <a href="docs.html">Docs</a>
+        <a href="changelog.html">Changelog</a>
+        <a href="index.html#download">Download</a>
+        <a href="https://github.com/mhmd2520/PingPair">GitHub</a>
+        <a href="mailto:hello@pingpair.app">Contact</a>
+      </nav>
+    </div>
+    <div class="wrap footer-fine">© 2026 Mohamed Khaled · Free to use under a <a href="https://github.com/mhmd2520/PingPair/blob/main/LICENSE">proprietary license</a> · Built for clean LAN measurements.</div>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

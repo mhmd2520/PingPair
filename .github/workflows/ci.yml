@@ -1,0 +1,47 @@
+name: CI
+
+# Lint + headless test suite. Runs on Windows because PingPair is a Windows app
+# and several tests touch Win-specific helpers (netsh argv builders, frozen-path
+# logic). The Qt tests run under the offscreen platform forced by
+# Software/tests/conftest.py, so no display server is needed.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+defaults:
+  run:
+    working-directory: Software
+
+jobs:
+  lint-and-test:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install (editable, with dev extras)
+        run: python -m pip install -e ".[dev]"
+
+      # Advisory only (continue-on-error): the suite is the hard gate. A newer
+      # ruff than the tree was last linted against flags a backlog of
+      # version-drift nits (unused `# noqa: SLF001`, import-order, SIM105) that
+      # are out of scope to fix here. The report still shows in the log; flip
+      # this to a blocking step once that backlog is cleared.
+      - name: Ruff (advisory)
+        continue-on-error: true
+        run: python -m ruff check src tests
+
+      - name: Pytest
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: python -m pytest tests/ -q

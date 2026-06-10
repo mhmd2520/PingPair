@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Documentation — PingPair</title>
+  <meta name="description" content="How to install PingPair, set up two Windows machines, run the 20-case LAN sweep, and read the report. Plus troubleshooting and FAQ." />
+  <link rel="canonical" href="https://www.pingpair.app/docs.html" />
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="PingPair documentation" />
+  <meta property="og:description" content="Install, two-PC setup, running a sweep, reading the report, troubleshooting, and FAQ." />
+  <meta property="og:url" content="https://www.pingpair.app/docs.html" />
+  <meta property="og:image" content="https://www.pingpair.app/assets/img/hero-run.png" />
+  <script>document.documentElement.classList.add("js");</script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ===================== Header ===================== -->
+  <header class="site-header" id="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="/" aria-label="PingPair home">
+        <img src="assets/logo.svg" alt="PingPair logo" />
+        <span><span class="word-ping">Ping</span><span class="word-pair">Pair</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="index.html#features">Features</a>
+        <a href="index.html#how">How it works</a>
+        <a href="index.html#screenshots">Screenshots</a>
+        <a href="docs.html">Docs</a>
+        <a href="changelog.html">Changelog</a>
+        <a href="https://github.com/mhmd2520/PingPair">GitHub</a>
+        <a class="nav-cta" href="index.html#download">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap doc-main">
+    <div class="doc-layout">
+      <!-- ---- TOC ---- -->
+      <aside class="doc-toc">
+        <strong>On this page</strong>
+        <a href="#install">01 · Install</a>
+        <a href="#topology">02 · Connect the two PCs</a>
+        <a href="#network">03 · IPs &amp; firewall</a>
+        <a href="#run">04 · Run a sweep</a>
+        <a href="#report">05 · Read the report</a>
+        <a href="#one-pc">06 · Try it on one PC</a>
+        <a href="#troubleshooting">07 · Troubleshooting</a>
+        <a href="#faq">08 · FAQ</a>
+      </aside>
+
+      <!-- ---- Body ---- -->
+      <article class="doc-body">
+        <span class="eyebrow">Documentation</span>
+        <h1>From download to your first filed report</h1>
+        <p class="doc-lead">PingPair runs the full 20-case latency + throughput sweep between two Windows
+          machines and writes a ready-to-file Word / Excel / PDF report. This guide takes you the whole way.</p>
+
+        <h2 id="install"><span class="sec-no">01</span> Install</h2>
+        <p>PingPair ships as a self-contained Windows build — <strong>no Python or other dependency to
+          install</strong>. The bundle carries its own runtime plus <code>fping</code> and <code>iperf3</code>.</p>
+        <ol class="steps">
+          <li><a href="index.html#download">Download the latest release</a> (a <code>.zip</code> from GitHub Releases).</li>
+          <li>Right-click the <code>.zip</code> → <strong>Extract All…</strong> to a folder you can write to
+            (e.g. your Desktop). Do this on <em>both</em> machines.</li>
+          <li>Open the extracted folder and run <code>PingPair.exe</code>.</li>
+        </ol>
+        <div class="callout">
+          <p><strong>SmartScreen warning?</strong> The build is unsigned, so Windows may show a
+            "Windows protected your PC" prompt on first run. Click <em>More info → Run anyway</em>. To be sure
+            you have the genuine file, verify its <a href="index.html#download">SHA-256</a> against the value on
+            the download page first.</p>
+        </div>
+        <div class="callout">
+          <p><strong>Administrator.</strong> PingPair needs to run elevated — it sets static IPs and adds
+            firewall rules through Windows' own <code>netsh</code>, and it asks before every change. It will
+            request elevation (a UAC prompt) automatically when you launch it.</p>
+        </div>
+
+        <h2 id="topology"><span class="sec-no">02</span> Connect the two PCs</h2>
+        <p>PingPair measures the link <em>between</em> two machines: one plays <strong>Server</strong>, the
+          other <strong>Client</strong>. Connect them on a dedicated point-to-point LAN.</p>
+        <div class="doc-fig">
+          <img src="assets/img/diagrams/topology.png" alt="Server at 192.168.1.1 connected by Ethernet to Client at 192.168.1.2; Client runs iperf3 and fping each case." loading="lazy" />
+          <figcaption>The canonical two-machine topology — Server <code>192.168.1.1</code>, Client <code>192.168.1.2</code>.</figcaption>
+        </div>
+        <ul>
+          <li><strong>Two physical laptops:</strong> join them with a single Ethernet cable (a crossover
+            cable isn't needed on modern NICs) or through a small switch.</li>
+          <li><strong>Two virtual machines:</strong> attach both to the same internal / LAN-segment virtual
+            network — not NAT, not Bridged.</li>
+        </ul>
+
+        <h2 id="network"><span class="sec-no">03</span> IPs &amp; firewall</h2>
+        <p>Each side needs a static IP on the test subnet, and Windows Firewall has to allow the test
+          traffic. PingPair's <strong>Setup</strong> tab checks all of this for you and offers one-click
+          fixes — it never changes the host silently.</p>
+        <table>
+          <thead><tr><th>Role</th><th>IPv4</th><th>Subnet</th></tr></thead>
+          <tbody>
+            <tr><td>Server</td><td><code>192.168.1.1</code></td><td><code>255.255.255.0</code></td></tr>
+            <tr><td>Client</td><td><code>192.168.1.2</code></td><td><code>255.255.255.0</code></td></tr>
+          </tbody>
+        </table>
+        <ol class="steps">
+          <li>Launch PingPair on each machine. On first launch it auto-detects its role from the bound IP
+            (and falls back to a safe default with a heads-up banner if neither matches).</li>
+          <li>Open the <strong>Setup</strong> tab. Any row in yellow or red has a fix button — each one shows
+            the exact <code>netsh</code> command it will run and asks for confirmation:
+            <ul>
+              <li><strong>Set the correct IP</strong> — assigns the role's canonical static IP.</li>
+              <li><strong>Firewall rules</strong> — allows ICMP echo, iperf3 (5201), and the control channel (5202).</li>
+              <li><strong>Disable Wi-Fi</strong> — if Wi-Fi is live on the test subnet it can corrupt the
+                measurement; this turns it off and re-enables it when you close the app.</li>
+            </ul>
+          </li>
+          <li>When every row is green on both machines, you're ready to run.</li>
+        </ol>
+        <div class="callout">
+          <p>Need a different addressing scheme (e.g. a <code>10.x.x.x</code> LAN, or a router between the two
+            sides)? The Setup tab has a per-PC <strong>custom IP</strong> override, and the Config tab lets you
+            change the Server/Client IPs, ports, protocol, payloads, bandwidths, and durations — then save it
+            as a reusable profile.</p>
+        </div>
+
+        <h2 id="run"><span class="sec-no">04</span> Run a sweep</h2>
+        <ol class="steps">
+          <li>On the <strong>Server</strong>, the listener starts automatically — leave the window open. It
+            shows <em>Listening on 192.168.1.1:5202</em>.</li>
+          <li>On the <strong>Client</strong>, open the <strong>Run</strong> tab. You'll see a 20-row grid
+            (payload × bandwidth), each row ticked. Keep them all for the full canonical sweep, or untick
+            rows / use the per-payload and per-bandwidth quick toggles to run a subset.</li>
+          <li>Press <strong>Run full sweep</strong>. The Client connects to the Server and walks every case in
+            sequence — latency and loss via <code>fping</code>, throughput / jitter / loss via
+            <code>iperf3</code> — filling in the table live, with charts and a duration-aware ETA.</li>
+          <li>When it finishes (≈16 minutes for the full 20 cases), PingPair saves the report set and shows a
+            summary. Press <strong>Stop</strong> any time to end early and cleanly.</li>
+        </ol>
+        <div class="callout">
+          <p><strong>Continuous (multi-segment) mode</strong> runs the same grid across several physical
+            segments in one walk-through — e.g. cab-to-cab on a train — and rolls them all into one
+            consolidated report with cross-segment comparison tables.</p>
+        </div>
+
+        <h2 id="report"><span class="sec-no">05</span> Read the report</h2>
+        <p>Every sweep writes a self-contained folder under <code>Reports/</code> with a Word document, an
+          Excel workbook, and a <code>.json</code> sidecar (PDF and TXT optional). The headline is the
+          8-column performance table; an analysis appendix adds per-metric charts and breakdowns.</p>
+        <div class="doc-fig">
+          <img src="assets/img/diagrams/report-artifacts.png" alt="A sweep produces a Word document, an Excel workbook, a JSON sidecar, and optional PDF/TXT." loading="lazy" />
+          <figcaption>What one sweep produces.</figcaption>
+        </div>
+        <ul>
+          <li><strong>Performance Metrics table</strong> — one row per case: payload, bandwidth pushed,
+            throughput received, jitter, loss, and min / avg / max latency.</li>
+          <li><strong>Per-case detail</strong> — status, return codes, error notes, and the exact
+            <code>iperf3</code> / <code>fping</code> command used for that case.</li>
+          <li><strong>Title block</strong> — run ID, timestamps, both IPs, tool versions, plus any test-record
+            metadata you filled in (technician, customer, hardware serial, environment, record ID).</li>
+          <li><strong>Analysis tab</strong> — load past runs back in to overlay, compare, and diff them, then
+            export a comparison report.</li>
+        </ul>
+        <div class="callout">
+          <p>See a full 20-case example:
+            <a href="assets/sample/PingPair-sample-report.pdf" target="_blank" rel="noopener">sample report (PDF)</a>
+            · <a href="assets/sample/PingPair-sample-report.docx" download>Word (.docx)</a>.</p>
+        </div>
+
+        <h2 id="one-pc"><span class="sec-no">06</span> Try it on one PC (Loopback)</h2>
+        <p>No second machine handy? Switch the role to <strong>Loopback</strong> on the Setup tab and PingPair
+          runs both ends on <code>127.0.0.1</code>. It's the quickest way to see the full workflow and a real
+          report without any cabling or IP setup.</p>
+        <div class="doc-fig">
+          <img src="assets/img/diagrams/topology-loopback.png" alt="Loopback mode runs both Server and Client roles on 127.0.0.1 on a single PC." loading="lazy" />
+          <figcaption>Loopback mode — both roles on a single machine.</figcaption>
+        </div>
+
+        <h2 id="troubleshooting"><span class="sec-no">07</span> Troubleshooting</h2>
+        <table>
+          <thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>Setup tab: <strong>Local NIC IP</strong> is red (FAIL)</td>
+              <td>The static IP isn't set or the NIC is on the wrong subnet. Click the row's
+                <strong>Set the correct IP</strong> button (it falls back to opening Windows adapter settings
+                if it can't detect the adapter).</td>
+            </tr>
+            <tr>
+              <td>Firewall rows stay yellow after pressing Fix</td>
+              <td>PingPair isn't elevated. Close it and relaunch — accept the UAC prompt so it can add the
+                <code>netsh</code> rules.</td>
+            </tr>
+            <tr>
+              <td>Orange banner: "IP doesn't match the saved role"</td>
+              <td>The bound IP no longer matches the role (NIC reset, DHCP, moved LAN). PingPair never flips
+                the role behind your back — either click <strong>Set the correct IP</strong>, or change the
+                role on the Setup tab.</td>
+            </tr>
+            <tr>
+              <td>Phantom packet loss in the report</td>
+              <td>Wi-Fi is live on the test subnet and Windows is routing some packets out the wrong NIC. Use
+                the Setup tab's <strong>Disable Wi-Fi</strong> fix (it's re-enabled when you close the app).</td>
+            </tr>
+            <tr>
+              <td>A 30 s case takes ~48 s</td>
+              <td>Expected — Windows' ~15.6 ms timer granularity stretches the per-packet interval. The
+                progress bar and ETA already account for it.</td>
+            </tr>
+            <tr>
+              <td>Sweep finished but no files in <code>Reports/</code></td>
+              <td>Auto-save is off (the default) and you clicked <em>Skip</em> on the save dialog. Click
+                <strong>Save report now</strong> on the Save Options tab — the result stays in memory until the
+                next sweep starts.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2 id="faq"><span class="sec-no">08</span> FAQ</h2>
+        <h3>Does PingPair phone home or collect any data?</h3>
+        <p>No. It runs entirely on your local network. The only outbound request it ever makes is an optional
+          check for its own updates against GitHub Releases — and that's it. No analytics, no accounts.</p>
+
+        <h3>Why does it need Administrator?</h3>
+        <p>To set static IPs and add Windows Firewall rules for the test traffic, via Windows' own
+          <code>netsh</code>. It always shows the exact command and asks before making a change, and it
+          reverts the Ethernet adapter to DHCP when you close it.</p>
+
+        <h3>Is it free? Is it open source?</h3>
+        <p>It's <strong>free to use</strong> for your own network testing. The full source is published on
+          GitHub so you can inspect exactly what it does, but it is <strong>not</strong> open source — it's
+          released under a proprietary license (see <a href="https://github.com/mhmd2520/PingPair/blob/main/LICENSE">LICENSE</a>),
+          which permits use but not redistribution or modification.</p>
+
+        <h3>How do I update?</h3>
+        <p>Open the <strong>About</strong> tab → <em>Check for updates</em>. PingPair downloads the new build
+          from GitHub Releases, verifies its SHA-256, swaps the install, and relaunches. Your settings and
+          saved reports are preserved.</p>
+
+        <h3>Can I change the test grid?</h3>
+        <p>Yes — the Config tab is a full test-plan editor. Override payloads, bandwidths, duration, protocol,
+          IPs, ports, and <code>fping</code> flags, and save named <code>.json</code> profiles.</p>
+
+        <p class="doc-foot-note">Still stuck? Open an issue on
+          <a href="https://github.com/mhmd2520/PingPair/issues">GitHub</a>.</p>
+      </article>
+    </div>
+  </main>
+
+  <!-- ===================== Footer ===================== -->
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <div class="brand">
+        <img src="assets/logo.svg" alt="" width="24" height="24" />
+        <span><span class="word-ping">Ping</span><span class="word-pair">Pair</span></span>
+        <span class="footer-ver">v<!--@ver-->0.1.0<!--/@ver--></span>
+      </div>
+      <nav class="footer-links">
+        <a href="index.html#features">Features</a>
+        <a href="docs.html">Docs</a>
+        <a href="changelog.html">Changelog</a>
+        <a href="index.html#download">Download</a>
+        <a href="https://github.com/mhmd2520/PingPair">GitHub</a>
+        <a href="mailto:hello@pingpair.app">Contact</a>
+      </nav>
+    </div>
+    <div class="wrap footer-fine">© 2026 Mohamed Khaled · Free to use under a <a href="https://github.com/mhmd2520/PingPair/blob/main/LICENSE">proprietary license</a> · Built for clean LAN measurements.</div>
+  </footer>
+
+  <script src="app.js" defer></script>
+</body>
+</html>

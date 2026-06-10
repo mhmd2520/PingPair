@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PingPair — Automated two-laptop LAN characterization for Windows</title>
+  <meta name="description" content="PingPair runs the full 20-case latency and throughput test between two Windows laptops with fping and iperf3, then hands you a ready-to-file Word, PDF and Excel report. Free to use, runs entirely offline." />
+  <link rel="canonical" href="https://www.pingpair.app/" />
+  <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+
+  <!-- Open Graph / Twitter so shared links unfurl with the brand -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="PingPair" />
+  <meta property="og:title" content="PingPair — Automated LAN characterization for Windows" />
+  <meta property="og:description" content="One click runs the full 20-case latency + throughput test between two laptops and produces a ready-to-file Word/PDF/Excel report." />
+  <meta property="og:url" content="https://www.pingpair.app/" />
+  <meta property="og:image" content="https://www.pingpair.app/assets/img/hero-run.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PingPair — Automated LAN characterization for Windows" />
+  <meta name="twitter:description" content="One click runs the full 20-case latency + throughput test between two laptops and produces a ready-to-file report." />
+  <meta name="twitter:image" content="https://www.pingpair.app/assets/img/hero-run.png" />
+
+  <!-- Flip on JS-only enhancements (scroll-reveal) before first paint so the
+       page never flashes hidden content when JavaScript is off. -->
+  <script>document.documentElement.classList.add("js");</script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- ===================== Header ===================== -->
+  <header class="site-header" id="site-header">
+    <div class="wrap nav">
+      <a class="brand" href="/" aria-label="PingPair home">
+        <img src="assets/logo.svg" alt="PingPair logo" />
+        <span><span class="word-ping">Ping</span><span class="word-pair">Pair</span></span>
+      </a>
+      <nav class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#screenshots">Screenshots</a>
+        <a href="docs.html">Docs</a>
+        <a href="changelog.html">Changelog</a>
+        <a href="https://github.com/mhmd2520/PingPair">GitHub</a>
+        <a class="nav-cta" href="#download">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===================== Hero ===================== -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="pill"><span class="dot"></span>Windows&nbsp;·&nbsp;Free&nbsp;to&nbsp;use&nbsp;·&nbsp;Offline</span>
+        <h1>Characterize a LAN link<br /><span class="accent">in one click.</span></h1>
+        <p class="lead">PingPair runs the full 20-case latency and throughput test between two laptops, then hands you a ready-to-file Word, PDF and Excel report.</p>
+        <div class="hero-cta">
+          <a class="btn btn-primary btn-lg" href="#download">
+            <span aria-hidden="true">⬇</span> Download for Windows
+          </a>
+          <a class="btn btn-ghost btn-lg" href="https://github.com/mhmd2520/PingPair">View on GitHub</a>
+        </div>
+        <p class="hero-sub">Runs entirely on your local network — <b>no account, no telemetry.</b></p>
+      </div>
+
+      <div class="hero-shot">
+        <div class="scope-frame">
+          <figure class="shot">
+            <div class="shot-bar"><i></i><i></i><i></i></div>
+            <img src="assets/img/hero-run.png" alt="PingPair Run tab showing a 20-case sweep in progress" width="1920" height="1032" />
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The ping pulse, traveling the link — recurs as a section divider -->
+  <div class="signal-divider" aria-hidden="true">
+    <svg viewBox="0 0 1100 52" preserveAspectRatio="none">
+      <path class="sig-base" d="M30 26 L470 26 L495 8 L520 44 L545 26 L1070 26" />
+      <path class="sig-pulse" d="M30 26 L470 26 L495 8 L520 44 L545 26 L1070 26" />
+      <circle class="sig-node" cx="30" cy="26" r="6" />
+      <circle class="sig-node" cx="1070" cy="26" r="6" />
+    </svg>
+  </div>
+
+  <!-- ===================== Stats band ===================== -->
+  <section class="stats" aria-label="At a glance">
+    <div class="wrap">
+      <div class="stats-grid" data-reveal>
+        <div class="stat">
+          <div class="num">20</div>
+          <div class="lbl">test cases per sweep</div>
+        </div>
+        <div class="stat">
+          <div class="num">2</div>
+          <div class="lbl">tools — fping + iperf3</div>
+        </div>
+        <div class="stat">
+          <div class="num">~16<span> min</span></div>
+          <div class="lbl">hands-off, end to end</div>
+        </div>
+        <div class="stat">
+          <div class="num">0</div>
+          <div class="lbl">accounts · trackers</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Features ===================== -->
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Capabilities</span>
+        <h2>Everything the test plan needs, automated</h2>
+        <p>One app on both laptops. Pick a role, press run, walk away.</p>
+      </div>
+      <div class="features">
+        <div class="card" data-reveal style="--reveal-delay:0s">
+          <span class="tag">01</span>
+          <div class="ico" aria-hidden="true">⚡</div>
+          <h3>20-case sweep, hands-off</h3>
+          <p>Every payload × bandwidth combination runs in sequence — no manual stepping between cases.</p>
+        </div>
+        <div class="card" data-reveal style="--reveal-delay:0.06s">
+          <span class="tag">02</span>
+          <div class="ico" aria-hidden="true">📡</div>
+          <h3>fping + iperf3 under the hood</h3>
+          <p>Bundled, version-pinned binaries measure latency, loss, throughput and jitter the way the test plan specifies.</p>
+        </div>
+        <div class="card" data-reveal style="--reveal-delay:0.12s">
+          <span class="tag">03</span>
+          <div class="ico" aria-hidden="true">📄</div>
+          <h3>Ready-to-file reports</h3>
+          <p>Each run writes Word, Excel and a JSON sidecar — with optional PDF and TXT — matching the standard results table.</p>
+        </div>
+        <div class="card" data-reveal style="--reveal-delay:0s">
+          <span class="tag">04</span>
+          <div class="ico" aria-hidden="true">🖥️</div>
+          <h3>Two laptops or just one</h3>
+          <p>Run Server/Client across a cable, or Loopback mode on a single PC to try it with no second machine.</p>
+        </div>
+        <div class="card" data-reveal style="--reveal-delay:0.06s">
+          <span class="tag">05</span>
+          <div class="ico" aria-hidden="true">🛠️</div>
+          <h3>Guided setup</h3>
+          <p>Built-in checks catch IP, firewall and cable problems up front — with one-click fixes, never silent changes.</p>
+        </div>
+        <div class="card" data-reveal style="--reveal-delay:0.12s">
+          <span class="tag">06</span>
+          <div class="ico" aria-hidden="true">📊</div>
+          <h3>Built-in analysis</h3>
+          <p>Live charts during the sweep, plus an Analysis tab to compare runs and segments side by side.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== How it works ===================== -->
+  <section id="how" class="how">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">The link under test</span>
+        <h2>A signal across two machines</h2>
+        <p>One side is the Server, the other the Client. The Client drives every case; the pulse is the measurement traveling the wire.</p>
+      </div>
+
+      <div class="how-stage" data-reveal>
+        <svg class="topo" viewBox="0 0 900 210" role="img" aria-label="Server at 192.168.1.1 connected by Ethernet to Client at 192.168.1.2; a ping pulse travels the link.">
+          <!-- the wire + ping waveform between the two endpoints -->
+          <path class="wave-base" d="M150 110 L370 110 L398 66 L426 154 L454 110 L750 110" />
+          <path class="wave-pulse" d="M150 110 L370 110 L398 66 L426 154 L454 110 L750 110" />
+
+          <!-- Server endpoint -->
+          <circle class="halo server" cx="150" cy="110" r="22" />
+          <circle class="endpoint" cx="150" cy="110" r="18" />
+          <circle class="endpoint-core" cx="150" cy="110" r="7" />
+          <text x="150" y="52" text-anchor="middle">SERVER</text>
+          <text x="150" y="168" text-anchor="middle" class="ip">192.168.1.1</text>
+
+          <!-- Client endpoint -->
+          <circle class="halo client" cx="750" cy="110" r="22" />
+          <circle class="endpoint" cx="750" cy="110" r="18" />
+          <circle class="endpoint-core" cx="750" cy="110" r="7" />
+          <text x="750" y="52" text-anchor="middle">CLIENT</text>
+          <text x="750" y="168" text-anchor="middle" class="ip">192.168.1.2</text>
+
+          <!-- link label -->
+          <text x="450" y="196" text-anchor="middle">fping · iperf3  —  port 5201 / control 5202</text>
+        </svg>
+      </div>
+
+      <div class="steps-flow">
+        <div class="flow-step" data-reveal style="--reveal-delay:0s">
+          <span class="idx">STEP 01</span>
+          <h3>Set up &amp; check</h3>
+          <p>Launch on both PCs. The Setup tab verifies IPs, firewall and cabling, with one-click fixes when something's off.</p>
+        </div>
+        <div class="flow-step" data-reveal style="--reveal-delay:0.07s">
+          <span class="idx">STEP 02</span>
+          <h3>Run the sweep</h3>
+          <p>Press <em>Run full sweep</em> on the Client. It walks all 20 cases in sequence, filling the table live with a duration-aware ETA.</p>
+        </div>
+        <div class="flow-step" data-reveal style="--reveal-delay:0.14s">
+          <span class="idx">STEP 03</span>
+          <h3>File the report</h3>
+          <p>PingPair saves a Word + Excel report (PDF / TXT optional) and a JSON sidecar — the performance table, ready to hand over.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Screenshots ===================== -->
+  <section id="screenshots">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">A look inside</span>
+        <h2>Native Windows UI, light or dark</h2>
+        <p>Eight focused tabs that walk you from prerequisites to a filed report.</p>
+      </div>
+
+      <!-- Theme toggle echoes the app's own Light/Dark switcher. Defaults to
+           Dark; the no-JS fallback simply shows the Dark images. -->
+      <div class="theme-toggle" role="group" aria-label="Screenshot theme">
+        <button type="button" class="tt-btn is-active" data-theme="dark" aria-pressed="true">Dark</button>
+        <button type="button" class="tt-btn" data-theme="light" aria-pressed="false">Light</button>
+      </div>
+
+      <div class="tour" id="tour">
+        <figure data-reveal style="--reveal-delay:0s">
+          <button type="button" class="shot zoomable" data-full="assets/img/tour/dark/setup.png" aria-label="Zoom Setup tab screenshot">
+            <span class="shot-bar"><i></i><i></i><i></i></span>
+            <img class="tour-img" data-dark="assets/img/tour/dark/setup.png" data-light="assets/img/tour/light/setup.png" src="assets/img/tour/dark/setup.png" alt="Setup tab with prerequisite checks and one-click fixes" loading="lazy" />
+          </button>
+          <figcaption><b>Setup</b> — prerequisite checks &amp; one-click fixes</figcaption>
+        </figure>
+        <figure data-reveal style="--reveal-delay:0.06s">
+          <button type="button" class="shot zoomable" data-full="assets/img/tour/dark/config.png" aria-label="Zoom Config tab screenshot">
+            <span class="shot-bar"><i></i><i></i><i></i></span>
+            <img class="tour-img" data-dark="assets/img/tour/dark/config.png" data-light="assets/img/tour/light/config.png" src="assets/img/tour/dark/config.png" alt="Config tab — the payload × bandwidth test-grid editor" loading="lazy" />
+          </button>
+          <figcaption><b>Config</b> — edit the test grid</figcaption>
+        </figure>
+        <figure data-reveal style="--reveal-delay:0.12s">
+          <button type="button" class="shot zoomable" data-full="assets/img/tour/dark/ping.png" aria-label="Zoom Ping tab screenshot">
+            <span class="shot-bar"><i></i><i></i><i></i></span>
+            <img class="tour-img" data-dark="assets/img/tour/dark/ping.png" data-light="assets/img/tour/light/ping.png" src="assets/img/tour/dark/ping.png" alt="Ping tab — quick reachability check before a sweep" loading="lazy" />
+          </button>
+          <figcaption><b>Ping</b> — quick reachability check</figcaption>
+        </figure>
+        <figure data-reveal style="--reveal-delay:0s">
+          <button type="button" class="shot zoomable" data-full="assets/img/tour/dark/run.png" aria-label="Zoom Run tab screenshot">
+            <span class="shot-bar"><i></i><i></i><i></i></span>
+            <img class="tour-img" data-dark="assets/img/tour/dark/run.png" data-light="assets/img/tour/light/run.png" src="assets/img/tour/dark/run.png" alt="Run tab — live progress, table and charts during the sweep" loading="lazy" />
+          </button>
+          <figcaption><b>Run</b> — live progress, table &amp; charts</figcaption>
+        </figure>
+        <figure data-reveal style="--reveal-delay:0.06s">
+          <button type="button" class="shot zoomable" data-full="assets/img/tour/dark/save-options.png" aria-label="Zoom Save Options tab screenshot">
+            <span class="shot-bar"><i></i><i></i><i></i></span>
+            <img class="tour-img" data-dark="assets/img/tour/dark/save-options.png" data-light="assets/img/tour/light/save-options.png" src="assets/img/tour/dark/save-options.png" alt="Save Options tab — report formats and test-record metadata" loading="lazy" />
+          </button>
+          <figcaption><b>Save Options</b> — formats &amp; record metadata</figcaption>
+        </figure>
+        <figure data-reveal style="--reveal-delay:0.12s">
+          <button type="button" class="shot zoomable" data-full="assets/img/tour/dark/analysis.png" aria-label="Zoom Analysis tab screenshot">
+            <span class="shot-bar"><i></i><i></i><i></i></span>
+            <img class="tour-img" data-dark="assets/img/tour/dark/analysis.png" data-light="assets/img/tour/light/analysis.png" src="assets/img/tour/dark/analysis.png" alt="Analysis tab — compare runs and segments side by side" loading="lazy" />
+          </button>
+          <figcaption><b>Analysis</b> — compare runs &amp; segments</figcaption>
+        </figure>
+      </div>
+
+      <!-- W3 — the report IS the deliverable, so let people open a real one. -->
+      <div class="sample" data-reveal>
+        <div class="sample-text">
+          <h3>See a real report</h3>
+          <p>Every sweep produces a Word + Excel report (PDF / TXT optional). Here's a full
+            20-case example so you know exactly what you'll hand over — performance table,
+            per-case detail, and the analysis charts.</p>
+          <p class="sample-note">Illustrative data from a point-to-point Cat6 link.</p>
+        </div>
+        <div class="sample-cta">
+          <a class="btn btn-primary" href="assets/sample/PingPair-sample-report.pdf" target="_blank" rel="noopener">
+            <span aria-hidden="true">📄</span> View sample (PDF)
+          </a>
+          <a class="btn btn-ghost" href="assets/sample/PingPair-sample-report.docx" download>
+            Download (.docx)
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Download ===================== -->
+  <section id="download" class="download">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">Get PingPair</span>
+        <h2>Download PingPair</h2>
+        <p>Windows 10 &amp; 11, 64-bit. No installer — unzip and run.</p>
+      </div>
+      <div class="dl-card" data-reveal>
+        <!-- The href is rebuilt from the version by publish/sync-site-release.ps1
+             on each /publish; the visible version sits in the @ver markers. -->
+        <a class="btn btn-primary btn-lg" id="dl-asset" href="https://github.com/mhmd2520/PingPair/releases/download/v0.1.0/PingPair-0.1.0-win64.zip">
+          <span aria-hidden="true">⬇</span> Download PingPair v<!--@ver-->0.1.0<!--/@ver-->
+        </a>
+        <div class="dl-meta">
+          <span><b>Version</b> <!--@ver-->0.1.0<!--/@ver--></span>
+          <span><b>Size</b> <!--@size-->~100 MB<!--/@size--></span>
+          <span><b>OS</b> Windows 10 / 11 (x64)</span>
+          <span><b>Setup</b> Two PCs + Ethernet, or one PC (Loopback)</span>
+        </div>
+
+        <!-- The bundle ships UNSIGNED, so this SHA-256 is the integrity gate
+             (HTTPS + mandatory checksum is the whole integrity story).
+             Filled in by publish/sync-site-release.ps1 on each /publish. -->
+        <div class="checksum">
+          <span class="lbl">SHA-256 — verify your download</span>
+          <code id="sha256"><!--@sha256-->b353f47d50e309e9ba66131c6ccd301e4add64f5a9978f2926829a96f4aa8c9f<!--/@sha256--></code>
+          <div class="verify-snip">
+            <span class="lbl">PowerShell — confirm it matches</span>
+<pre><code>Get-FileHash .\PingPair-<!--@ver-->0.1.0<!--/@ver-->-win64.zip -Algorithm SHA256</code></pre>
+          </div>
+        </div>
+
+        <p class="note">
+          Windows SmartScreen may warn on first run — the source is published but
+          the build is unsigned; the SHA-256 above is how you confirm it's the real file.
+          You can also grab the
+          <a id="dl-checksum-file" href="https://github.com/mhmd2520/PingPair/releases/download/v0.1.0/PingPair-0.1.0-win64.zip.sha256">checksum file</a>
+          or browse
+          <a href="https://github.com/mhmd2520/PingPair/releases">all releases on GitHub</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Trust ===================== -->
+  <section class="trust">
+    <div class="wrap trust-grid">
+      <div class="item" data-reveal style="--reveal-delay:0s">
+        <div class="ico" aria-hidden="true">🔒</div>
+        <h3>Runs fully offline</h3>
+        <p>PingPair works entirely on your local network. The only outbound request it ever makes is an optional check for its own updates.</p>
+      </div>
+      <div class="item" data-reveal style="--reveal-delay:0.07s">
+        <div class="ico" aria-hidden="true">🙈</div>
+        <h3>No telemetry</h3>
+        <p>No analytics, no accounts, no data collection. Your test results stay on your machine.</p>
+      </div>
+      <div class="item" data-reveal style="--reveal-delay:0.14s">
+        <div class="ico" aria-hidden="true">📖</div>
+        <h3>Free &amp; source-available</h3>
+        <p>Free to use for your own network testing. The full source is published on GitHub so you can read exactly what it does before you run it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== Footer ===================== -->
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <div class="brand">
+        <img src="assets/logo.svg" alt="" width="24" height="24" />
+        <span><span class="word-ping">Ping</span><span class="word-pair">Pair</span></span>
+        <span class="footer-ver">v<!--@ver-->0.1.0<!--/@ver--></span>
+      </div>
+      <nav class="footer-links">
+        <a href="#features">Features</a>
+        <a href="docs.html">Docs</a>
+        <a href="changelog.html">Changelog</a>
+        <a href="#download">Download</a>
+        <a href="https://github.com/mhmd2520/PingPair">GitHub</a>
+        <a href="mailto:hello@pingpair.app">Contact</a>
+      </nav>
+    </div>
+    <div class="wrap footer-fine">© 2026 Mohamed Khaled · Free to use under a <a href="https://github.com/mhmd2520/PingPair/blob/main/LICENSE">proprietary license</a> · Built for clean LAN measurements.</div>
+  </footer>
+
+  <!-- ===================== Lightbox (W3 click-to-zoom) ===================== -->
+  <div class="lightbox" id="lightbox" hidden>
+    <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Close">✕</button>
+    <img id="lightbox-img" src="" alt="" />
+  </div>
+
+  <script src="app.js" defer></script>
+</body>
+</html>
