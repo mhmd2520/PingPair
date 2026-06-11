@@ -23,6 +23,8 @@ site/
     ├── logo.svg      # the app mark (copied from Software/src/pingpair/resources/logo.svg)
     ├── favicon-{16,32,192,512}.png  # ┐ SEO favicon set + iOS icon — REGENERATE from
     ├── apple-touch-icon.png         # ┘ logo.svg via publish\make-site-favicons.py
+    ├── og-card.png   # 1200x630 og:image/twitter:image brand card (logo + wordmark +
+    │                 # tagline, NOT a screenshot) — regenerate via publish\make-og-card.py
     ├── fonts/        # bundled Inter (same fonts the app ships — no external CDN)
     ├── img/
     │   ├── hero-run.png         # hero screenshot (Run tab, Dark)
