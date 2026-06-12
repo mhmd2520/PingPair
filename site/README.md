@@ -25,7 +25,11 @@ site/
     ├── apple-touch-icon.png         # ┘ logo.svg via publish\make-site-favicons.py
     ├── og-card.png   # 1200x630 og:image/twitter:image brand card (logo + wordmark +
     │                 # tagline, NOT a screenshot) — regenerate via publish\make-og-card.py
-    ├── fonts/        # bundled Inter (same fonts the app ships — no external CDN)
+    ├── fonts/        # bundled Inter as Latin-subset WOFF2 (~39 KB/weight; no external CDN).
+    │                 # Regenerate from the app's TTFs (Software/src/pingpair/resources/fonts/):
+    │                 #   .venv\Scripts\python -m fontTools.subset Inter-<W>.ttf --flavor=woff2
+    │                 #     --output-file=Inter-<W>.woff2 --layout-features='*' --unicodes=<latin set>
+    │                 # (full TTFs were ~410 KB each — 85% of cold-visit bytes; replaced 2026-06-13)
     ├── img/
     │   ├── hero-run.png         # hero screenshot (Run tab, Dark)
     │   ├── tour/{dark,light}/   # W3 gallery — 6 tab renders per theme

@@ -88,6 +88,12 @@
   <!-- Flip on JS-only enhancements (scroll-reveal) before first paint so the
        page never flashes hidden content when JavaScript is off. -->
   <script>document.documentElement.classList.add("js");</script>
+  <!-- Preload the above-the-fold weights (body 400 / UI 600 / headings 700) so
+       they don't wait on CSS parse; 500 is sparse and loads on demand.
+       crossorigin is mandatory for font preloads, even same-origin. -->
+  <link rel="preload" href="assets/fonts/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/Inter-SemiBold.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/Inter-Bold.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
