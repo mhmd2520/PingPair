@@ -14,7 +14,7 @@ site/
 ├── changelog.html    # W5 — release notes (kept in sync with /CHANGELOG.md)
 ├── 404.html          # W5 — not-found page (GitHub Pages serves it automatically)
 ├── styles.css        # "Signal Instrument" design system — mirrors the app's Dark theme + logo palette
-├── app.js            # progressive enhancement only: scroll-reveal + sticky-nav + gallery Light/Dark toggle + lightbox
+├── app.js            # progressive enhancement only: scroll-reveal + sticky-nav + nav scroll-spy + gallery Light/Dark toggle (alternate theme pre-warmed at idle) + lightbox
 ├── CNAME             # custom domain for GitHub Pages: www.pingpair.app
 ├── robots.txt        # allow-all (minus README/CNAME) + sitemap pointer
 ├── sitemap.xml       # W5 — home / docs / changelog

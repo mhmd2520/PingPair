@@ -61,11 +61,78 @@
     window.addEventListener("scroll", onScroll, { passive: true });
   }
 
+  // ---- Scroll-spy: underline the nav link of the section in view ----
+  // Only same-page anchors participate (docs/changelog nav links are plain
+  // hrefs, so this block is inert on those pages).
+  var spyPairs = [];
+  document.querySelectorAll('.nav-links a[href^="#"]').forEach(function (link) {
+    var section = document.getElementById(link.getAttribute("href").slice(1));
+    if (section) spyPairs.push({ link: link, section: section });
+  });
+  if (spyPairs.length) {
+    var spy = function () {
+      // The "reading line" sits just below the sticky header. The active
+      // section is the last one whose top has crossed it, so the highlight
+      // persists through unlinked sections (stats, trust) until the next
+      // linked one takes over. Nothing is active above the first section.
+      var line = 120;
+      var atBottom = window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+      var active = null;
+      spyPairs.forEach(function (pair) {
+        if (pair.section.getBoundingClientRect().top <= line) active = pair.link;
+      });
+      // A short final section may never reach the line; at the very bottom
+      // of the page hand the highlight to the last linked section.
+      if (atBottom) active = spyPairs[spyPairs.length - 1].link;
+      spyPairs.forEach(function (pair) {
+        pair.link.classList.toggle("is-active", pair.link === active);
+      });
+    };
+    var spyQueued = false;
+    window.addEventListener("scroll", function () {
+      if (!spyQueued) {
+        spyQueued = true;
+        requestAnimationFrame(function () {
+          spyQueued = false;
+          spy();
+        });
+      }
+    }, { passive: true });
+    window.addEventListener("resize", spy, { passive: true });
+    spy();
+  }
+
   // ---- Screenshot Light/Dark toggle (echoes the app's theme switcher) ----
   var toggle = document.querySelector(".theme-toggle");
   if (toggle) {
     var buttons = toggle.querySelectorAll(".tt-btn");
     var imgs = document.querySelectorAll(".tour-img");
+
+    // Pre-warm the other theme's screenshots once the page is idle, so the
+    // first Dark/Light switch swaps from cache instead of stalling on six
+    // fresh fetches (the tour images are lazy-loaded, so the alternate set
+    // is never requested otherwise). decode() also pays the decode cost off
+    // the click path.
+    var warmAlternates = function () {
+      imgs.forEach(function (img) {
+        ["data-dark", "data-light"].forEach(function (attr) {
+          var url = img.getAttribute(attr);
+          if (url && url !== img.getAttribute("src")) {
+            var pre = new Image();
+            pre.decoding = "async";
+            pre.src = url;
+            if (pre.decode) pre.decode().catch(function () {});
+          }
+        });
+      });
+    };
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(warmAlternates, { timeout: 3000 });
+    } else {
+      window.setTimeout(warmAlternates, 1500);
+    }
+
     toggle.addEventListener("click", function (e) {
       var btn = e.target.closest(".tt-btn");
       if (!btn) return;
