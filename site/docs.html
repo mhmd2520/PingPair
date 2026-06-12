@@ -23,6 +23,52 @@
   <meta property="og:description" content="Install, two-PC setup, running a sweep, reading the report, troubleshooting, and FAQ." />
   <meta property="og:url" content="https://www.pingpair.app/docs.html" />
   <meta property="og:image" content="https://www.pingpair.app/assets/og-card.png" />
+
+  <!-- JSON-LD: same WebSite + SoftwareApplication entities as index.html so
+       every page asserts the site/app/author relationship. The author "@id"
+       matches the Person "@id" on mhmd2520.com — that's what lets Google merge
+       both sites into one entity; don't change or drop it. The
+       "softwareVersion"/"downloadUrl" values are rewritten on every release by
+       publish\sync-site-release.ps1 (it sweeps every *.html) — keep the keys. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "PingPair",
+    "alternateName": "PingPair — Automated LAN Characterization Tool",
+    "url": "https://www.pingpair.app/"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "PingPair",
+    "operatingSystem": "Windows 10, Windows 11",
+    "applicationCategory": "UtilitiesApplication",
+    "description": "PingPair runs the full 20-case latency and throughput test between two Windows laptops with fping and iperf3, then produces a ready-to-file Word, PDF and Excel report. Free to use, runs entirely offline.",
+    "url": "https://www.pingpair.app/",
+    "image": "https://www.pingpair.app/assets/favicon-512.png",
+    "screenshot": "https://www.pingpair.app/assets/img/hero-run.png",
+    "softwareVersion": "0.1.0",
+    "downloadUrl": "https://github.com/mhmd2520/PingPair/releases/download/v0.1.0/PingPair-0.1.0-win64.zip",
+    "releaseNotes": "https://www.pingpair.app/changelog.html",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "author": {
+      "@type": "Person",
+      "@id": "https://mhmd2520.com/#person",
+      "name": "Mohamed Khaled Mohyeldin Naeim",
+      "alternateName": "Mohamed Khaled",
+      "jobTitle": "Network Design Engineer",
+      "url": "https://mhmd2520.com/",
+      "sameAs": [
+        "https://linkedin.com/in/mhmd2520/",
+        "https://github.com/mhmd2520"
+      ]
+    }
+  }
+  </script>
+
   <script>document.documentElement.classList.add("js");</script>
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -275,7 +321,7 @@
         <a href="mailto:hello@pingpair.app">Contact</a>
       </nav>
     </div>
-    <div class="wrap footer-fine">© 2026 Mohamed Khaled · Free to use under a <a href="https://github.com/mhmd2520/PingPair/blob/main/LICENSE">proprietary license</a> · Built for clean LAN measurements.</div>
+    <div class="wrap footer-fine">© 2026 · Built by <a href="https://mhmd2520.com/">Mohamed Khaled — Network Design Engineer</a> (mhmd2520.com) · Free to use under a <a href="https://github.com/mhmd2520/PingPair/blob/main/LICENSE">proprietary license</a> · Built for clean LAN measurements.</div>
   </footer>
 
   <script src="app.js" defer></script>

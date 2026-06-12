@@ -45,13 +45,16 @@
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "PingPair",
+    "alternateName": "PingPair — Automated LAN Characterization Tool",
     "url": "https://www.pingpair.app/"
   }
   </script>
   <!-- JSON-LD: SoftwareApplication schema for software rich-result eligibility.
        The HTML-comment release sentinels can't live inside JSON, so
        publish\sync-site-release.ps1 rewrites the "softwareVersion" and
-       "downloadUrl" values directly on every release — keep those key names. -->
+       "downloadUrl" values directly on every release — keep those key names.
+       The author "@id" matches the Person "@id" on mhmd2520.com — that's what
+       lets Google merge both sites into one entity. Don't change or drop it. -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -67,7 +70,18 @@
     "downloadUrl": "https://github.com/mhmd2520/PingPair/releases/download/v0.1.0/PingPair-0.1.0-win64.zip",
     "releaseNotes": "https://www.pingpair.app/changelog.html",
     "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-    "author": { "@type": "Person", "name": "Mohamed Khaled", "url": "https://mhmd2520.com/" }
+    "author": {
+      "@type": "Person",
+      "@id": "https://mhmd2520.com/#person",
+      "name": "Mohamed Khaled Mohyeldin Naeim",
+      "alternateName": "Mohamed Khaled",
+      "jobTitle": "Network Design Engineer",
+      "url": "https://mhmd2520.com/",
+      "sameAs": [
+        "https://linkedin.com/in/mhmd2520/",
+        "https://github.com/mhmd2520"
+      ]
+    }
   }
   </script>
 
@@ -425,7 +439,7 @@
         <a href="mailto:hello@pingpair.app">Contact</a>
       </nav>
     </div>
-    <div class="wrap footer-fine">© 2026 Mohamed Khaled · Free to use under a <a href="https://github.com/mhmd2520/PingPair/blob/main/LICENSE">proprietary license</a> · Built for clean LAN measurements.</div>
+    <div class="wrap footer-fine">© 2026 · Built by <a href="https://mhmd2520.com/">Mohamed Khaled — Network Design Engineer</a> (mhmd2520.com) · Free to use under a <a href="https://github.com/mhmd2520/PingPair/blob/main/LICENSE">proprietary license</a> · Built for clean LAN measurements.</div>
   </footer>
 
   <!-- ===================== Lightbox (W3 click-to-zoom) ===================== -->
